@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "stdafx.h"
 #include "TCPSocket.h"
 #include <exception>
@@ -55,7 +57,7 @@ TCPSocket::TCPSocket(void)
 	s = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);//создаём сокет
 
 	if (INVALID_SOCKET == s)//если не удалось - бросаем исключение
-		throw std::exception(::itoa(::WSAGetLastError(), buf, 16));
+		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
 
 	iLinks = new int(1);//инициализируем счётчик ссылок на этот сокет
 	bound = listening = connected = false;//инициализируем флаги
@@ -114,7 +116,7 @@ bool TCPSocket::listen(int port, int backlog)
 	char buf[10];
 
 	if (!bound && !this->bind(port))//если сокет не сбинден, нужно сбиндить
-		throw std::exception(::itoa(::WSAGetLastError(), buf, 16));
+		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
 
 	return listening = (0 == ::listen(s, backlog));//переводим сокет в режим прослушки
 }
@@ -130,12 +132,12 @@ TCPSocket TCPSocket::accept(int port, sockaddr * addr, int * addrlen)
 		throw std::exception("Already in use");
 
 	if (!this->listening && !this->listen(port))//если сокет ещё не переведён в режим прослушки, переводим его
-		throw std::exception(::itoa(::WSAGetLastError(), buf, 16));
+		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
 
 	ts = ::accept(s, addr, addrlen);//и ждём входящего соединения
 
 	if (INVALID_SOCKET == rs.s)
-		throw std::exception(::itoa(::WSAGetLastError(), buf, 16));
+		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
 
 	::closesocket(rs.s);//если дождались, то заменяем сокет, созданый по умолчанию,
 
@@ -153,7 +155,7 @@ bool TCPSocket::connect(const sockaddr_in & name)
 	return connected = (0 == ::connect(s, (sockaddr *)&name, sizeof(sockaddr_in)));//соединяемся на основе данных переменной name
 }
 
-bool TCPSocket::connect(const std::string & addr, int port)//более дружелюбный вариант фуркции
+bool TCPSocket::connect(const std::string & addr, int port)//более дружелюбный вариант функции
 {
 	sockaddr_in s_in = { 0 };//инициализация структуры нулями
 
@@ -188,7 +190,7 @@ TCPSocket::AChar TCPSocket::receive()//принимаем данные
 	}
 
 	if (res == SOCKET_ERROR)//если во время чтения произошла ошибка, кидаем исключение
-		throw std::exception(::itoa(::WSAGetLastError(), buf, 16));
+		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
 
 	if (res == 0)//если подключение было закрыто, то возвращаем пустой буфер
 	{
