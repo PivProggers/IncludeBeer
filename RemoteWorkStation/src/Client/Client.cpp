@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "..\Transport\TCPSocket.h"
+#include "..\Transport\TCPClient.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -9,7 +10,7 @@ using namespace std;
 
 int main()
 {
-	TCPSocket client;
+	TCPClient client;
 
 	// Присоединяемся к серверу
 	string name;
