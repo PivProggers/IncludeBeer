@@ -4,53 +4,54 @@
 #include "stdafx.h"
 #include <string>
 #include "serialization.h"
-#include "classes.h"
-//
-//// главный заголовочный файл
-//#include "ess_stream.h"
-//// этот заголовок для хранилища XML
-//#include "ess_xml.h"
-//
-//
-//
-//void Serialization(C0 c0, C1 c1) {
-//	int version = 1;
-//	std::string xml_root = "root";
-//	std::string instance_name = "x";
-//
-//	try
-//	{
-//		// регистрируется класс
-//		ess::Registry registry;
-//		// разновидность с макросом для краткости
-//		registry << ESS_REGISTER(C0, C0);
-//
-//		// где хранятся данные...
-//		ess::xml_medium storage;
-//		{
-//			// экземпляр для сериализации
-//			C0 c0;
-//			C1 c1;
-//
-//			ess::xml_storing_adapter adapter(the_storage, xml_root, version);
-//			// сохранить корневой C0
-//			ess::stream(adapter, c0, "c0");
-//			// сохранить производный C1
-//			ess::stream(adapter, c1, "c1");
-//		}
-//	}
-//}
-//
-//void Deserialization()
-//{
-//	C0* p0 = 0;
-//	// восстановить из хранилища XML
-//	Chordia::xml_source xmls(storage.c_str(), storage.size());
-//	// и адаптер
-//	ess::xml_loading_adapter adapter(xmls, xml_root, version);
-//	// направить в указатель C0
-//	ess::stream(adapter, p0, instance_name);
-//	// теперь p0 готов к использованию
-//	delete p0;
-//}
-//
+#include <fstream>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include "..\..\IncludeBeer\RemoteWorkStation\src\Commands\Command.h"
+
+int main() {
+	// create and open a character archive for output
+	std::ofstream ofs("filename");
+
+	// create class instance
+	string name("run");
+
+	RunAppliation g(name, NULL);
+
+	// save data to archive
+	{
+		boost::archive::text_oarchive oa(ofs);
+		// write class instance to archive
+		oa << g;
+		// archive and stream closed when destructors are called
+	}
+
+	// ... some time later restore the class instance to its orginal state
+	gps_position newg;
+	{
+		// create and open an archive for input
+		std::ifstream ifs("filename");
+		boost::archive::text_iarchive ia(ifs);
+		// read class state from archive
+		ia >> newg;
+		// archive and stream closed when destructors are called
+	}
+
+
+	namespace boost {
+		namespace serialization {
+
+			template<class Archive>
+			void serialize(Archive& ar, gps_position& g, const unsigned int version)
+			{
+				ar& g.degrees;
+				ar& g.minutes;
+				ar& g.seconds;
+			}
+
+		} // namespace serialization
+	}
+
+	return 0;
+}
