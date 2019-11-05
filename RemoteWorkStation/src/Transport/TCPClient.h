@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "TransportApi.h"
 #include "TCPSocket.h"
+#include "TCPServer.h"
 
 #define _CRT_SECURE_NO_WARNINGS
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
@@ -21,7 +22,7 @@
 #pragma comment( lib, "Ws2_32.lib" )
 #endif
 
-class TCPClient : TCPSocket {
+class TCPClient : TCPSocket{
 protected:
 
 

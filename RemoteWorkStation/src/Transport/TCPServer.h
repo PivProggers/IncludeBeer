@@ -35,6 +35,8 @@ public:
 	TRANSPORT_API bool listen(int port, int backlog = SOMAXCONN);
 	TRANSPORT_API TCPServer accept(int port, __out sockaddr * addr = 0, __out int * addrlen = 0);
 	
+
+	//сделать метод отправки отчета
 };
 
 #endif

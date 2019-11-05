@@ -15,6 +15,7 @@ int main()
 	// Присоединяемся к серверу
 	string name;
 	name = "127.0.0.1";
+	
 	client.connect(name, 65042);
 	char arr[] = { 'A','B', 'C', 'D', 'F' };
 	TCPSocket::AChar buf;

@@ -6,6 +6,7 @@
 #include <exception>
 
 
+
 TCPServer::TCPServer(void)
 {
 	if (!this->init)//если система сокетов не инициализирована, то просисходит инициализация
