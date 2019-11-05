@@ -80,72 +80,6 @@ TCPSocket::~TCPSocket(void)
 			//throw std::exception("Error at WSACleanup()");
 }
 
-bool TCPSocket::bind(int port, const sockaddr_in * name)
-{
-	if (this->connected || this->bound || this->listening)//нельзя биндить сокет, который уже был присоединён
-		throw std::exception("Already used");
-
-	if (name)//если была передана структура sockaddr_in
-		return bound = (0 == ::bind(s, (sockaddr *)name, sizeof(sockaddr_in)));//то биндим на основании её данных, иначе
-
-	sockaddr_in s_in = { 0 };//заполняем структуру значениями по умолчанию
-
-	s_in.sin_family = AF_INET;
-	s_in.sin_addr.S_un.S_addr = INADDR_ANY;
-	s_in.sin_port = ::htons(port);//кроме порта
-
-	return bound = (0 == ::bind(s, (sockaddr *)&s_in, sizeof(sockaddr_in)));//и биндим на эту структуру
-}
-
-bool TCPSocket::bind(const std::string & addr, int port)//более дружелюбная версия
-{
-	sockaddr_in s_in = { 0 };//инициализация структуры нулями
-
-	s_in.sin_addr.S_un.S_addr = ::inet_addr(addr.c_str());//преобразуем строку в адрес
-	s_in.sin_family = AF_INET;//семейство протоколов
-	s_in.sin_port = ::htons(port);//преобразуем порядок байт в слове для формата стека TCP/IP
-
-	if (s_in.sin_addr.S_un.S_addr == INADDR_NONE)
-		throw std::exception("Wrong ip address");
-
-	return bind(port, &s_in);
-}
-
-bool TCPSocket::listen(int port, int backlog)
-{
-	char buf[10];
-
-	if (!bound && !this->bind(port))//если сокет не сбинден, нужно сбиндить
-		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
-
-	return listening = (0 == ::listen(s, backlog));//переводим сокет в режим прослушки
-}
-
-
-TCPSocket TCPSocket::accept(int port, sockaddr * addr, int * addrlen)
-{
-	TCPSocket rs;
-	SOCKET ts;
-	char buf[10];
-
-	if (this->connected)
-		throw std::exception("Already in use");
-
-	if (!this->listening && !this->listen(port))//если сокет ещё не переведён в режим прослушки, переводим его
-		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
-
-	ts = ::accept(s, addr, addrlen);//и ждём входящего соединения
-
-	if (INVALID_SOCKET == rs.s)
-		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
-
-	::closesocket(rs.s);//если дождались, то заменяем сокет, созданый по умолчанию,
-
-	rs.s = ts;//сокетом соедиения
-	rs.connected = true;
-
-	return rs;
-}
 
 bool TCPSocket::connect(const sockaddr_in & name)
 {
@@ -167,6 +101,14 @@ bool TCPSocket::connect(const std::string & addr, int port)//более дружелюбный в
 		throw std::exception("Wrong ip address");
 
 	return connect(s_in);//соединяемся
+}
+
+bool TCPSocket::send(const TCPSocket::AChar & inbuf)
+{
+	if (!this->connected)
+		throw std::exception("Must be connected first");
+
+	return inbuf.size() == ::send(s, &inbuf[0], inbuf.size(), 0);//отправляем данные из буфера
 }
 
 TCPSocket::AChar TCPSocket::receive()//принимаем данные
@@ -203,12 +145,4 @@ TCPSocket::AChar TCPSocket::receive()//принимаем данные
 	::recv(s, &rval[0], size, 0);//читаем данные
 
 	return rval;//возвращаем буфер
-}
-
-bool TCPSocket::send(const TCPSocket::AChar & inbuf)
-{
-	if (!this->connected)
-		throw std::exception("Must be connected first");
-
-	return inbuf.size() == ::send(s, &inbuf[0], inbuf.size(), 0);//отправляем данные из буфера
 }
