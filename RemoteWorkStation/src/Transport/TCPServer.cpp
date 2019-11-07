@@ -116,3 +116,39 @@ bool TCPServer::listen(int port, int backlog)
 
 	return rs;
 }
+
+ TCPSocket::AChar TCPServer::receive()//принимаем данные
+ {
+	 AChar rval;//массив, в который будем сохранять данные
+	 AChar::size_type size = 1;//начальный размер массива - 1
+	 char buf[10];
+
+	 if (!this->connected)
+		 throw std::exception("Must be connected first");
+
+	 rval.resize(size);//устанавливаем начальный размер
+
+	 int res = ::recv(s, &rval[0], size, MSG_PEEK);//пробуем читать данные
+
+	 while (res && res != SOCKET_ERROR && size == res)//пока данные читаются
+	 {
+		 rval.resize(++size);//увеличиваем размер буфера
+
+		 res = ::recv(s, &rval[0], size, MSG_PEEK);//пробуем читать данные
+	 }
+
+	 if (res == SOCKET_ERROR)//если во время чтения произошла ошибка, кидаем исключение
+		 throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
+
+	 if (res == 0)//если подключение было закрыто, то возвращаем пустой буфер
+	 {
+		 rval.resize(0);
+
+		 return rval;
+	 }
+
+	 rval.resize(--size);//корректируем размер буфера
+	 ::recv(s, &rval[0], size, 0);//читаем данные
+
+	 return rval;//возвращаем буфер
+ }

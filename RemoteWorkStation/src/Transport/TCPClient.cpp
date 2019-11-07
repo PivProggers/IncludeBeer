@@ -57,7 +57,6 @@ TCPClient::~TCPClient(void)
 			//throw std::exception("Error at WSACleanup()");
 }
 
-
 bool TCPClient::connect(const sockaddr_in & name)
 {
 	if (this->bound || this->listening || this->connected)//если сокет уже используется, то кидаем исключение

@@ -15,16 +15,29 @@ int main()
 	// Присоединяемся к серверу
 	string name;
 	name = "127.0.0.1";
-	
-	client.connect(name, 65042);
-	char arr[] = { 'A','B', 'C', 'D', 'F' };
-	TCPSocket::AChar buf;
-	buf.insert(buf.end(), arr, arr + 5);
-	client.send(buf);
+	int port = 65042;
 
-	TCPSocket::AChar bufrec;
-	// Читаем данные от сервера
-	bufrec = client.receive();
+	sockaddr_in s_in = { 0 };//инициализация структуры нулями
+
+	s_in.sin_addr.S_un.S_addr = ::inet_addr(name.c_str());//преобразуем строку в адрес
+	s_in.sin_family = AF_INET;//семейство протоколов
+	s_in.sin_port = ::htons(port);//преобразуем порядок байт в слове для формата стека TCP/IP
+
+	if (s_in.sin_addr.S_un.S_addr == INADDR_NONE)
+		throw std::exception("Wrong ip address");
+	
+
+	client.connect(s_in);
+
+	TCPSocket::AChar buf;
+	
+	std::string str("Test string");
+
+	buf.assign(str.begin(), str.end());//заполняем буфер для передачи
+
+	client.send((const TCPSocket::AChar)buf);//отправляем данные
+
+	
 
 	return 0;
 }

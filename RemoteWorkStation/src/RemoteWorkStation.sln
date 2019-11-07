@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29418.71
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemoteWorkStation", "RemoteWorkStation\RemoteWorkStation.vcxproj", "{777AC179-1630-4614-8AC4-80CA67619E8E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Transport", "Transport\Transport.vcxproj", "{69DF371B-64A4-402B-A54C-D6A76DE1D347}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Serialization", "Serialization\Serialization.vcxproj", "{D2C7D473-D0B9-4F68-B87F-24084B2E3579}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{9C1A31C9-DF1A-4AD3-9DEF-D8574152AEDD}"
 EndProject
@@ -39,14 +37,6 @@ Global
 		{69DF371B-64A4-402B-A54C-D6A76DE1D347}.Release|x64.Build.0 = Release|x64
 		{69DF371B-64A4-402B-A54C-D6A76DE1D347}.Release|x86.ActiveCfg = Release|Win32
 		{69DF371B-64A4-402B-A54C-D6A76DE1D347}.Release|x86.Build.0 = Release|Win32
-		{D2C7D473-D0B9-4F68-B87F-24084B2E3579}.Debug|x64.ActiveCfg = Debug|x64
-		{D2C7D473-D0B9-4F68-B87F-24084B2E3579}.Debug|x64.Build.0 = Debug|x64
-		{D2C7D473-D0B9-4F68-B87F-24084B2E3579}.Debug|x86.ActiveCfg = Debug|Win32
-		{D2C7D473-D0B9-4F68-B87F-24084B2E3579}.Debug|x86.Build.0 = Debug|Win32
-		{D2C7D473-D0B9-4F68-B87F-24084B2E3579}.Release|x64.ActiveCfg = Release|x64
-		{D2C7D473-D0B9-4F68-B87F-24084B2E3579}.Release|x64.Build.0 = Release|x64
-		{D2C7D473-D0B9-4F68-B87F-24084B2E3579}.Release|x86.ActiveCfg = Release|Win32
-		{D2C7D473-D0B9-4F68-B87F-24084B2E3579}.Release|x86.Build.0 = Release|Win32
 		{9C1A31C9-DF1A-4AD3-9DEF-D8574152AEDD}.Debug|x64.ActiveCfg = Debug|x64
 		{9C1A31C9-DF1A-4AD3-9DEF-D8574152AEDD}.Debug|x64.Build.0 = Debug|x64
 		{9C1A31C9-DF1A-4AD3-9DEF-D8574152AEDD}.Debug|x86.ActiveCfg = Debug|Win32

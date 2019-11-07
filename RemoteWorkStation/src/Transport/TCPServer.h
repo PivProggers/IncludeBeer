@@ -34,7 +34,8 @@ public:
 	TRANSPORT_API bool bind(const std::string & addr, int port);
 	TRANSPORT_API bool listen(int port, int backlog = SOMAXCONN);
 	TRANSPORT_API TCPServer accept(int port, __out sockaddr * addr = 0, __out int * addrlen = 0);
-	
+	TRANSPORT_API AChar receive();
+
 
 	//сделать метод отправки отчета
 };
