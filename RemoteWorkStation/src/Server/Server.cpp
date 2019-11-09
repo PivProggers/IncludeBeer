@@ -11,12 +11,12 @@ using namespace std;
 
 int main()
 {
-	TCPServer server; TCPClient client;
+	TCPServer server; TCPServer conn;
 
 	// Присоединяемся к серверу
 	string name;
-	name = "localhost";
-	int port = 65042;
+	name = "127.1.1.255";
+	int port = 65041;
 
 	sockaddr_in s_in = { 0 };//заполняем структуру значениями по умолчанию
 
@@ -26,22 +26,44 @@ int main()
 
 	server.bind(port, &(const sockaddr_in)s_in);
 	server.listen(port);
-	server.accept(port);
+	//server.accept(port);
 
-	while (true) {
-			TCPSocket::AChar bufrec;
-			// Читаем переданных клиентом данные
-			bufrec = client.receive();
-			// Отправляем клиенту полученную от него же строку
-			client.send(bufrec);
-		}
+	//while (true)
+	//{
+		conn = server.accept(port);
+		cout << "Connected by " << name << endl;
+		TCPSocket::AChar bufrec;
+		// Читаем переданных клиентом данные
+		bufrec = conn.receive();
 
-	TCPSocket::AChar bufrec;
-	// Читаем данные от сервера
-	bufrec = server.receive();
+		for (int i = 0; i < sizeof(bufrec); ++i)
+				cout << bufrec[i];
 
-	for (int i = 0; i < sizeof(bufrec); ++i)
-			cout << bufrec[i];
+
+		// Отправляем клиенту полученную от него же строку
+		//conn.send(bufrec);
+			
+
+
+	//}
+
+
+
+
+	//while (true) {
+	//		TCPSocket::AChar bufrec;
+	//		// Читаем переданных клиентом данные
+	//		bufrec = client.receive();
+	//		// Отправляем клиенту полученную от него же строку
+	//		client.send(bufrec);
+	//	}
+
+	//TCPSocket::AChar bufrec;
+	//// Читаем данные от сервера
+	//bufrec = server.receive();
+
+	//for (int i = 0; i < sizeof(bufrec); ++i)
+	//		cout << bufrec[i];
 
 	return 0;
 }

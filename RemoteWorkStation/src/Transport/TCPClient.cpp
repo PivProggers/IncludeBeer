@@ -5,6 +5,9 @@
 #include "TCPClient.h"
 #include <exception>
 
+#include <iostream>
+using namespace std;
+
 TCPClient::TCPClient(const TCPClient & copy)
 {
 	this->s = copy.s;//копируем сокет
@@ -59,9 +62,11 @@ TCPClient::~TCPClient(void)
 
 bool TCPClient::connect(const sockaddr_in & name)
 {
+	cout << "try to connect" << endl;
 	if (this->bound || this->listening || this->connected)//если сокет уже используется, то кидаем исключение
 		throw std::exception("Already in use");
-
+	if (::connect(s, (sockaddr *)&name, sizeof(sockaddr_in)) != 0)
+		printf("%d", WSAGetLastError());
 	return connected = (0 == ::connect(s, (sockaddr *)&name, sizeof(sockaddr_in)));//соединяемся на основе данных переменной name
 }
 
@@ -81,8 +86,8 @@ bool TCPClient::connect(const std::string & addr, int port)//более дружелюбный в
 
 bool TCPClient::send(const TCPSocket::AChar & inbuf)
 {
-	if (!this->connected)
-		throw std::exception("Must be connected first");
+	if (!this->connected)                                                         
+		throw std::exception("Must be connected first");                      
 
 	return inbuf.size() == ::send(s, &inbuf[0], inbuf.size(), 0);//отправляем данные из буфера
 }
