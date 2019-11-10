@@ -27,15 +27,18 @@ int main()
 
 	cout << "then will be connection try" << endl;
 	client.connect(s_in);
-
+	cout << "я  1";
 	TCPSocket::AChar buf;
 	
 	std::string str("Test string");
 
 	buf.assign(str.begin(), str.end());//заполняем буфер для передачи
-	
-	client.send((const TCPSocket::AChar)buf);//отправляем данные
 
+
+	cout << "я  2";
+
+	client.send((const TCPSocket::AChar)buf);//отправляем данные
+	cout << "я  3";
 	
 
 	return 0;

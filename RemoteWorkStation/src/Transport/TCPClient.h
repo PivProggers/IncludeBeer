@@ -32,7 +32,7 @@ public:
 	TRANSPORT_API ~TCPClient(void);
 
 	TRANSPORT_API bool connect(const sockaddr_in & name);
-	TRANSPORT_API bool connect(const std::string & addr, int port);
+//	TRANSPORT_API bool connect(const std::string & addr, int port);
 	TRANSPORT_API bool send(const AChar & inbuf);
 	TRANSPORT_API AChar receive();
 };
