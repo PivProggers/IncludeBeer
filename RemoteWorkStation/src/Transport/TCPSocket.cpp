@@ -73,11 +73,11 @@ TCPSocket::~TCPSocket(void)
 	char buf[10];
 
 	if (0 != ::closesocket(s))//закрываем сокет
-		;//throw std::exception(::itoa(::WSAGetLastError(), buf, 16));
+		throw std::exception(::itoa(::WSAGetLastError(), buf, 16));
 
 	if (--this->init == 0)//если счётчик сокетов подошёл к концу
-		if (0 != ::WSACleanup());//то очищаем работу с сокетами
-			//throw std::exception("Error at WSACleanup()");
+		if (0 != ::WSACleanup())//то очищаем работу с сокетами
+			throw std::exception("Error at WSACleanup()");
 }
 
 

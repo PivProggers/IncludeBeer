@@ -4,7 +4,7 @@
 #include "TCPSocket.h"
 #include "TCPServer.h"
 #include <exception>
-
+#include <iostream>
 
 
 TCPServer::TCPServer(void)
@@ -42,14 +42,12 @@ TCPServer::~TCPServer(void)
 	char buf[10];
 
 	if (0 != ::closesocket(s))//закрываем сокет
-		;//throw std::exception(::itoa(::WSAGetLastError(), buf, 16));
+		throw std::exception(::itoa(::WSAGetLastError(), buf, 16));
 
 	if (--this->init == 0)//если счЄтчик сокетов подошЄл к концу
-		if (0 != ::WSACleanup());//то очищаем работу с сокетами
-			//throw std::exception("Error at WSACleanup()");
+		if (0 != ::WSACleanup())//то очищаем работу с сокетами
+			throw std::exception("Error at WSACleanup()");
 }
-
-
 
 bool TCPServer::bind(int port, const sockaddr_in * name)
 {
@@ -106,14 +104,16 @@ bool TCPServer::listen(int port, int backlog)
 
 	ts = ::accept(s, addr, addrlen);//и ждЄм вход€щего соединени€
 
-	if (INVALID_SOCKET == rs.s)
+	if (INVALID_SOCKET == rs.s || INVALID_SOCKET == ts)
+	{
 		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
-
+		printf("invalid socket");
+	}
 	::closesocket(rs.s);//если дождались, то замен€ем сокет, созданый по умолчанию,
 
 	rs.s = ts;//сокетом соедиени€
 	rs.connected = true;
-
+	printf("concted: %d :\n", rs.connected);
 	return rs;
 }
 
@@ -123,6 +123,8 @@ bool TCPServer::listen(int port, int backlog)
 	 AChar::size_type size = 1;//начальный размер массива - 1
 	 char buf[10];
 
+	 std::cout << "recieving started";
+
 	 if (!this->connected)
 		 throw std::exception("Must be connected first");
 
@@ -130,11 +132,15 @@ bool TCPServer::listen(int port, int backlog)
 
 	 int res = ::recv(s, &rval[0], size, MSG_PEEK);//пробуем читать данные
 
+	 std::cout << res;//////////////////////////////
+	 int i = 0;/////////////////////////////////////
+
 	 while (res && res != SOCKET_ERROR && size == res)//пока данные читаютс€
 	 {
 		 rval.resize(++size);//увеличиваем размер буфера
-
+		 
 		 res = ::recv(s, &rval[0], size, MSG_PEEK);//пробуем читать данные
+		 std::cout << rval[i];//////////////////////
 	 }
 
 	 if (res == SOCKET_ERROR)//если во врем€ чтени€ произошла ошибка, кидаем исключение

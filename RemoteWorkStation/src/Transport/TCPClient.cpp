@@ -4,6 +4,7 @@
 #include "TCPSocket.h"
 #include "TCPClient.h"
 #include <exception>
+#include <iostream>
 
 TCPClient::TCPClient(const TCPClient & copy)
 {
@@ -60,24 +61,30 @@ TCPClient::~TCPClient(void)
 bool TCPClient::connect(const sockaddr_in & name)
 {
 	if (this->bound || this->listening || this->connected)//если сокет уже используется, то кидаем исключение
+	{
 		throw std::exception("Already in use");
-
-	return connected = (0 == ::connect(s, (sockaddr *)&name, sizeof(sockaddr_in)));//соединяемся на основе данных переменной name
+		std::cout << "я  4 \n";
+	}
+	std::cout << "я  5 \n";
+	connected = (0 == ::connect(s, (sockaddr*)&name, sizeof(name)));//соединяемся на основе данных переменной name
+	std::cout << connected;
+	return connected;
 }
 
-bool TCPClient::connect(const std::string & addr, int port)//более дружелюбный вариант функции
-{
-	sockaddr_in s_in = { 0 };//инициализация структуры нулями
-
-	s_in.sin_addr.S_un.S_addr = ::inet_addr(addr.c_str());//преобразуем строку в адрес
-	s_in.sin_family = AF_INET;//семейство протоколов
-	s_in.sin_port = ::htons(port);//преобразуем порядок байт в слове для формата стека TCP/IP
-
-	if (s_in.sin_addr.S_un.S_addr == INADDR_NONE)
-		throw std::exception("Wrong ip address");
-
-	return connect(s_in);//соединяемся
-}
+//bool TCPClient::connect(const std::string & addr, int port)//более дружелюбный вариант функции
+//{
+//	sockaddr_in s_in = { 0 };//инициализация структуры нулями
+//
+//	s_in.sin_addr.S_un.S_addr = ::inet_addr(addr.c_str());//преобразуем строку в адрес
+//	s_in.sin_family = AF_INET;//семейство протоколов
+//	s_in.sin_port = ::htons(port);//преобразуем порядок байт в слове для формата стека TCP/IP
+//
+//	if (s_in.sin_addr.S_un.S_addr == INADDR_NONE)
+//		throw std::exception("Wrong ip address");
+//
+//	return connect(s_in);//соединяемся
+//}
+//
 
 bool TCPClient::send(const TCPSocket::AChar & inbuf)
 {
