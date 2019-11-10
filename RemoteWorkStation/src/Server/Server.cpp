@@ -11,12 +11,13 @@ using namespace std;
 
 int main()
 {
+
 	TCPServer server ; TCPClient client1;
 
 	// Присоединяемся к серверу
 	string name;
-	name = "localhost";
-	int port = 65042;
+	name = "127.1.1.255";
+	int port = 65041;
 
 	sockaddr_in s_in = { 0 };//заполняем структуру значениями по умолчанию
 	s_in.sin_family = AF_INET;
@@ -25,6 +26,7 @@ int main()
 
 	server.bind(port, &(const sockaddr_in)s_in);
 	server.listen(port);
+
 	
 	TCPSocket::AChar bufrec;
 	int len = 1024;
@@ -45,11 +47,7 @@ int main()
 	cout << 3 << endl;
 	for (int i = 0; i < sizeof(bufrec); ++i)
 			cout << bufrec[i];
-	//TCPSocket::AChar bufrec;
-	//// Читаем данные от сервера
-	//bufrec = server.receive();
 
-	
 
 	return 0;
 }

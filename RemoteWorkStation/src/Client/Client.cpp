@@ -14,8 +14,9 @@ int main()
 
 	// Присоединяемся к серверу
 	string name;
-	name = "127.0.0.1";
-	int port = 65042;
+	//name = "localhost";
+	name = "127.1.1.255";
+	int port = 65041;
 
 	sockaddr_in s_in = { 0 };//инициализация структуры нулями
 
@@ -23,10 +24,8 @@ int main()
 	s_in.sin_family = AF_INET;//семейство протоколов
 	s_in.sin_port = ::htons(port);//преобразуем порядок байт в слове для формата стека TCP/IP
 
-	if (s_in.sin_addr.S_un.S_addr == INADDR_NONE)
-		throw std::exception("Wrong ip address");
-	
 
+	cout << "then will be connection try" << endl;
 	client.connect(s_in);
 	cout << "я  1";
 	TCPSocket::AChar buf;
@@ -35,7 +34,9 @@ int main()
 
 	buf.assign(str.begin(), str.end());//заполняем буфер для передачи
 
+
 	cout << "я  2";
+
 	client.send((const TCPSocket::AChar)buf);//отправляем данные
 	cout << "я  3";
 	

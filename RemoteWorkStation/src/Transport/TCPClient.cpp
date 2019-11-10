@@ -6,19 +6,22 @@
 #include <exception>
 #include <iostream>
 
+#include <iostream>
+using namespace std;
+
 TCPClient::TCPClient(const TCPClient & copy)
 {
-	this->s = copy.s;//копируем сокет
-	this->iLinks = copy.iLinks;//так же копируем счётчик ссылок на сокет
-	this->bound = copy.bound;//и флаги
+	this->s = copy.s;//ГЄГ®ГЇГЁГ°ГіГҐГ¬ Г±Г®ГЄГҐГІ
+	this->iLinks = copy.iLinks;//ГІГ ГЄ Г¦ГҐ ГЄГ®ГЇГЁГ°ГіГҐГ¬ Г±Г·ВёГІГ·ГЁГЄ Г±Г±Г»Г«Г®ГЄ Г­Г  Г±Г®ГЄГҐГІ
+	this->bound = copy.bound;//ГЁ ГґГ«Г ГЈГЁ
 	this->listening = copy.listening;
 	this->connected = copy.connected;
-	(*iLinks)++;//увеличиваем счётчик ссылок на одну ссылку
+	(*iLinks)++;//ГіГўГҐГ«ГЁГ·ГЁГўГ ГҐГ¬ Г±Г·ВёГІГ·ГЁГЄ Г±Г±Г»Г«Г®ГЄ Г­Г  Г®Г¤Г­Гі Г±Г±Г»Г«ГЄГі
 }
 
 TCPClient::TCPClient(void)
 {
-	if (!this->init)//если система сокетов не инициализирована, то просисходит инициализация
+	if (!this->init)//ГҐГ±Г«ГЁ Г±ГЁГ±ГІГҐГ¬Г  Г±Г®ГЄГҐГІГ®Гў Г­ГҐ ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§ГЁГ°Г®ГўГ Г­Г , ГІГ® ГЇГ°Г®Г±ГЁГ±ГµГ®Г¤ГЁГІ ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§Г Г¶ГЁГї
 	{
 		WSADATA wsaData;
 
@@ -28,104 +31,106 @@ TCPClient::TCPClient(void)
 			throw std::exception("Error at WSAStartup()");
 	}
 
-	init++;//увеличиваем счётчик сокетов
+	init++;//ГіГўГҐГ«ГЁГ·ГЁГўГ ГҐГ¬ Г±Г·ВёГІГ·ГЁГЄ Г±Г®ГЄГҐГІГ®Гў
 
 	char buf[10];
 
-	s = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);//создаём сокет
+	s = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);//Г±Г®Г§Г¤Г ВёГ¬ Г±Г®ГЄГҐГІ
 
-	if (INVALID_SOCKET == s)//если не удалось - бросаем исключение
+	if (INVALID_SOCKET == s)//ГҐГ±Г«ГЁ Г­ГҐ ГіГ¤Г Г«Г®Г±Гј - ГЎГ°Г®Г±Г ГҐГ¬ ГЁГ±ГЄГ«ГѕГ·ГҐГ­ГЁГҐ
 		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
 
-	iLinks = new int(1);//инициализируем счётчик ссылок на этот сокет
-	bound = listening = connected = false;//инициализируем флаги
+	iLinks = new int(1);//ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§ГЁГ°ГіГҐГ¬ Г±Г·ВёГІГ·ГЁГЄ Г±Г±Г»Г«Г®ГЄ Г­Г  ГЅГІГ®ГІ Г±Г®ГЄГҐГІ
+	bound = listening = connected = false;//ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§ГЁГ°ГіГҐГ¬ ГґГ«Г ГЈГЁ
 }
 
 TCPClient::~TCPClient(void)
 {
-	if (--(*iLinks) > 0)//если счётчик ссылок подошёл к концу, то
+	if (--(*iLinks) > 0)//ГҐГ±Г«ГЁ Г±Г·ВёГІГ·ГЁГЄ Г±Г±Г»Г«Г®ГЄ ГЇГ®Г¤Г®ГёВёГ« ГЄ ГЄГ®Г­Г¶Гі, ГІГ®
 		return;
 
-	delete iLinks;//удаляем его
+	delete iLinks;//ГіГ¤Г Г«ГїГҐГ¬ ГҐГЈГ®
 
 	char buf[10];
 
-	if (0 != ::closesocket(s))//закрываем сокет
+	if (0 != ::closesocket(s))//Г§Г ГЄГ°Г»ГўГ ГҐГ¬ Г±Г®ГЄГҐГІ
 		;//throw std::exception(::itoa(::WSAGetLastError(), buf, 16));
 
-	if (--this->init == 0)//если счётчик сокетов подошёл к концу
-		if (0 != ::WSACleanup());//то очищаем работу с сокетами
+	if (--this->init == 0)//ГҐГ±Г«ГЁ Г±Г·ВёГІГ·ГЁГЄ Г±Г®ГЄГҐГІГ®Гў ГЇГ®Г¤Г®ГёВёГ« ГЄ ГЄГ®Г­Г¶Гі
+		if (0 != ::WSACleanup());//ГІГ® Г®Г·ГЁГ№Г ГҐГ¬ Г°Г ГЎГ®ГІГі Г± Г±Г®ГЄГҐГІГ Г¬ГЁ
 			//throw std::exception("Error at WSACleanup()");
 }
 
 bool TCPClient::connect(const sockaddr_in & name)
 {
-	if (this->bound || this->listening || this->connected)//если сокет уже используется, то кидаем исключение
+	cout << "try to connect" << endl;
+	if (this->bound || this->listening || this->connected)//ГҐГ±Г«ГЁ Г±Г®ГЄГҐГІ ГіГ¦ГҐ ГЁГ±ГЇГ®Г«ГјГ§ГіГҐГІГ±Гї, ГІГ® ГЄГЁГ¤Г ГҐГ¬ ГЁГ±ГЄГ«ГѕГ·ГҐГ­ГЁГҐ
 	{
 		throw std::exception("Already in use");
-		std::cout << "я  4 \n";
+		std::cout << "Гї  4 \n";
 	}
-	std::cout << "я  5 \n";
-	connected = (0 == ::connect(s, (sockaddr*)&name, sizeof(name)));//соединяемся на основе данных переменной name
+	std::cout << "Гї  5 \n";
+	connected = (0 == ::connect(s, (sockaddr*)&name, sizeof(name)));//Г±Г®ГҐГ¤ГЁГ­ГїГҐГ¬Г±Гї Г­Г  Г®Г±Г­Г®ГўГҐ Г¤Г Г­Г­Г»Гµ ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г®Г© name
 	std::cout << connected;
 	return connected;
+
 }
 
-//bool TCPClient::connect(const std::string & addr, int port)//более дружелюбный вариант функции
+//bool TCPClient::connect(const std::string & addr, int port)//ГЎГ®Г«ГҐГҐ Г¤Г°ГіГ¦ГҐГ«ГѕГЎГ­Г»Г© ГўГ Г°ГЁГ Г­ГІ ГґГіГ­ГЄГ¶ГЁГЁ
 //{
-//	sockaddr_in s_in = { 0 };//инициализация структуры нулями
+//	sockaddr_in s_in = { 0 };//ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§Г Г¶ГЁГї Г±ГІГ°ГіГЄГІГіГ°Г» Г­ГіГ«ГїГ¬ГЁ
 //
-//	s_in.sin_addr.S_un.S_addr = ::inet_addr(addr.c_str());//преобразуем строку в адрес
-//	s_in.sin_family = AF_INET;//семейство протоколов
-//	s_in.sin_port = ::htons(port);//преобразуем порядок байт в слове для формата стека TCP/IP
+//	s_in.sin_addr.S_un.S_addr = ::inet_addr(addr.c_str());//ГЇГ°ГҐГ®ГЎГ°Г Г§ГіГҐГ¬ Г±ГІГ°Г®ГЄГі Гў Г Г¤Г°ГҐГ±
+//	s_in.sin_family = AF_INET;//Г±ГҐГ¬ГҐГ©Г±ГІГўГ® ГЇГ°Г®ГІГ®ГЄГ®Г«Г®Гў
+//	s_in.sin_port = ::htons(port);//ГЇГ°ГҐГ®ГЎГ°Г Г§ГіГҐГ¬ ГЇГ®Г°ГїГ¤Г®ГЄ ГЎГ Г©ГІ Гў Г±Г«Г®ГўГҐ Г¤Г«Гї ГґГ®Г°Г¬Г ГІГ  Г±ГІГҐГЄГ  TCP/IP
 //
 //	if (s_in.sin_addr.S_un.S_addr == INADDR_NONE)
 //		throw std::exception("Wrong ip address");
 //
-//	return connect(s_in);//соединяемся
+//	return connect(s_in);//Г±Г®ГҐГ¤ГЁГ­ГїГҐГ¬Г±Гї
 //}
 //
 
 bool TCPClient::send(const TCPSocket::AChar & inbuf)
 {
-	if (!this->connected)
-		throw std::exception("Must be connected first");
+	if (!this->connected)                                                         
+		throw std::exception("Must be connected first");                      
 
-	return inbuf.size() == ::send(s, &inbuf[0], inbuf.size(), 0);//отправляем данные из буфера
+	return inbuf.size() == ::send(s, &inbuf[0], inbuf.size(), 0);//Г®ГІГЇГ°Г ГўГ«ГїГҐГ¬ Г¤Г Г­Г­Г»ГҐ ГЁГ§ ГЎГіГґГҐГ°Г 
 }
 
-TCPSocket::AChar TCPClient::receive()//принимаем данные
+TCPSocket::AChar TCPClient::receive()//ГЇГ°ГЁГ­ГЁГ¬Г ГҐГ¬ Г¤Г Г­Г­Г»ГҐ
 {
-	AChar rval;//массив, в который будем сохранять данные
-	AChar::size_type size = 1;//начальный размер массива - 1
+	AChar rval;//Г¬Г Г±Г±ГЁГў, Гў ГЄГ®ГІГ®Г°Г»Г© ГЎГіГ¤ГҐГ¬ Г±Г®ГµГ°Г Г­ГїГІГј Г¤Г Г­Г­Г»ГҐ
+	AChar::size_type size = 1;//Г­Г Г·Г Г«ГјГ­Г»Г© Г°Г Г§Г¬ГҐГ° Г¬Г Г±Г±ГЁГўГ  - 1
 	char buf[10];
 
 	if (!this->connected)
 		throw std::exception("Must be connected first");
 
-	rval.resize(size);//устанавливаем начальный размер
+	rval.resize(size);//ГіГ±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГ¬ Г­Г Г·Г Г«ГјГ­Г»Г© Г°Г Г§Г¬ГҐГ°
 
-	int res = ::recv(s, &rval[0], size, MSG_PEEK);//пробуем читать данные
+	int res = ::recv(s, &rval[0], size, MSG_PEEK);//ГЇГ°Г®ГЎГіГҐГ¬ Г·ГЁГІГ ГІГј Г¤Г Г­Г­Г»ГҐ
 
-	while (res && res != SOCKET_ERROR && size == res)//пока данные читаются
+	while (res && res != SOCKET_ERROR && size == res)//ГЇГ®ГЄГ  Г¤Г Г­Г­Г»ГҐ Г·ГЁГІГ ГѕГІГ±Гї
 	{
-		rval.resize(++size);//увеличиваем размер буфера
+		rval.resize(++size);//ГіГўГҐГ«ГЁГ·ГЁГўГ ГҐГ¬ Г°Г Г§Г¬ГҐГ° ГЎГіГґГҐГ°Г 
 
-		res = ::recv(s, &rval[0], size, MSG_PEEK);//пробуем читать данные
+		res = ::recv(s, &rval[0], size, MSG_PEEK);//ГЇГ°Г®ГЎГіГҐГ¬ Г·ГЁГІГ ГІГј Г¤Г Г­Г­Г»ГҐ
 	}
 
-	if (res == SOCKET_ERROR)//если во время чтения произошла ошибка, кидаем исключение
+	if (res == SOCKET_ERROR)//ГҐГ±Г«ГЁ ГўГ® ГўГ°ГҐГ¬Гї Г·ГІГҐГ­ГЁГї ГЇГ°Г®ГЁГ§Г®ГёГ«Г  Г®ГёГЁГЎГЄГ , ГЄГЁГ¤Г ГҐГ¬ ГЁГ±ГЄГ«ГѕГ·ГҐГ­ГЁГҐ
 		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
 
-	if (res == 0)//если подключение было закрыто, то возвращаем пустой буфер
+	if (res == 0)//ГҐГ±Г«ГЁ ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­ГЁГҐ ГЎГ»Г«Г® Г§Г ГЄГ°Г»ГІГ®, ГІГ® ГўГ®Г§ГўГ°Г Г№Г ГҐГ¬ ГЇГіГ±ГІГ®Г© ГЎГіГґГҐГ°
 	{
 		rval.resize(0);
 
 		return rval;
 	}
 
-	rval.resize(--size);//корректируем размер буфера
-	::recv(s, &rval[0], size, 0);//читаем данные
+	rval.resize(--size);//ГЄГ®Г°Г°ГҐГЄГІГЁГ°ГіГҐГ¬ Г°Г Г§Г¬ГҐГ° ГЎГіГґГҐГ°Г 
+	::recv(s, &rval[0], size, 0);//Г·ГЁГІГ ГҐГ¬ Г¤Г Г­Г­Г»ГҐ
 
-	return rval;//возвращаем буфер
+	return rval;//ГўГ®Г§ГўГ°Г Г№Г ГҐГ¬ ГЎГіГґГҐГ°
 }
