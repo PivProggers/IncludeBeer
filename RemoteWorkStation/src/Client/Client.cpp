@@ -19,14 +19,7 @@ int main()
 	name = "127.0.0.1";
 	int port = 65041;
 
-	sockaddr_in s_in = { 0 };//инициализация структуры нулями
-
-	s_in.sin_addr.S_un.S_addr = ::inet_addr(name.c_str());//преобразуем строку в адрес
-	s_in.sin_family = AF_INET;//семейство протоколов
-	s_in.sin_port = ::htons(port);//преобразуем порядок байт в слове для формата стека TCP/IP
-
-
-	client.connect(s_in);
+	client.connect(name, port);
 	TCPSocket::AChar buf;
 	
 	std::string str("Test string");
