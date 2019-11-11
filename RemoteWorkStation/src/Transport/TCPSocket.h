@@ -36,14 +36,14 @@ public:
 	TRANSPORT_API TCPSocket(void);
 	TRANSPORT_API TCPSocket(const TCPSocket & copy);
 	TRANSPORT_API ~TCPSocket(void);
-	TRANSPORT_API bool bind(int port, const sockaddr_in * name = 0);
-	TRANSPORT_API bool bind(const std::string & addr, int port);
-	TRANSPORT_API bool listen(int port, int backlog = SOMAXCONN);
-	TRANSPORT_API TCPSocket accept(int port, __out sockaddr * addr = 0, __out int * addrlen = 0);
-	TRANSPORT_API bool connect(const sockaddr_in & name);
-	TRANSPORT_API bool connect(const std::string & addr, int port);
-	TRANSPORT_API bool send(const AChar & inbuf);
-	TRANSPORT_API AChar receive();
+	TRANSPORT_API bool bind(int port, const sockaddr_in * name = 0);//server
+	TRANSPORT_API bool bind(const std::string & addr, int port);//server
+	TRANSPORT_API bool listen(int port, int backlog = SOMAXCONN);//server
+	TRANSPORT_API TCPSocket accept(int port, __out sockaddr * addr = 0, __out int * addrlen = 0);//server
+	TRANSPORT_API bool connect(const sockaddr_in & name);//client
+	TRANSPORT_API bool connect(const std::string & addr, int port);//client
+	TRANSPORT_API bool send(const AChar & inbuf);//client ? server
+	TRANSPORT_API AChar receive();//client ? server
 	TRANSPORT_API TCPSocket & operator=(const TCPSocket & copy);
 
 	

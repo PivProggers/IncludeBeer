@@ -19,14 +19,7 @@ int main()
 		name = "127.0.0.1";
 		int port = 65041;
 
-		//sockaddr_in s_in = { 0 };//заполняем структуру значениями по умолчанию
-		//s_in.sin_family = AF_INET;
-		//s_in.sin_addr.S_un.S_addr = INADDR_ANY;
-		//s_in.sin_port = ::htons(port);//кроме порта
-
-
 		server.bind(name, port);
-		//server.bind(port, &(const sockaddr_in)s_in);
 		server.listen(port);
 
 
