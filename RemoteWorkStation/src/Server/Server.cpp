@@ -2,52 +2,75 @@
 
 #include "pch.h"
 #include "..\Transport\TCPSocket.h"
-#include "..\Transport\TCPServer.h"
-#include "..\Transport\TCPClient.h"
 #include <iostream>
 #include <vector>
 #include <string>
+#include <conio.h>
 using namespace std;
 
 int main()
 {
+	system("COLOR 02");
+	while (true) {
+		TCPSocket server, client;
 
-	TCPServer server ; TCPClient client1;
+		// Присоединяемся к серверу
+		string name;
+		name = "127.0.0.1";
+		int port = 65041;
 
-	// Присоединяемся к серверу
-	string name;
-	name = "127.1.1.255";
-	int port = 65041;
+		sockaddr_in s_in = { 0 };//заполняем структуру значениями по умолчанию
+		s_in.sin_family = AF_INET;
+		s_in.sin_addr.S_un.S_addr = INADDR_ANY;
+		s_in.sin_port = ::htons(port);//кроме порта
 
-	sockaddr_in s_in = { 0 };//заполняем структуру значениями по умолчанию
-	s_in.sin_family = AF_INET;
-	s_in.sin_addr.S_un.S_addr = INADDR_ANY;
-	s_in.sin_port = ::htons(port);//кроме порта
+		server.bind(port, &(const sockaddr_in)s_in);
+		server.listen(port);
 
-	server.bind(port, &(const sockaddr_in)s_in);
-	server.listen(port);
 
-	
-	TCPSocket::AChar bufrec;
-	int len = 1024;
-	cout << 1 << endl;
-	while (true) 
-	{
-		cout << 1.5 << endl;
-		TCPServer client( server.accept(port));
-		cout << 1.9 << endl;
-		// Читаем переданных клиентом данные
-		bufrec = client.receive();
-		cout << 2 << endl;
-		if (bufrec.size() != 0)
-			break;
-		// Отправляем клиенту полученную от него же строку
-		//client.send(bufrec);
-	}
-	cout << 3 << endl;
-	for (int i = 0; i < sizeof(bufrec); ++i)
+		TCPSocket::AChar bufrec;
+		int len = 1024;
+
+		while (true)
+		{
+			client = server.accept(port);
+			// Читаем переданных клиентом данные
+			Sleep(1000);
+
+			bufrec.resize(len);
+			bufrec = client.receive();
+
+			if (bufrec.size() != 0)
+				break;
+
+			// Отправляем клиенту полученную от него же строку
+			client.send(bufrec);
+		}
+
+		//вывод сообщения клиента
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, 12);
+		printf("\tCLIENT MESSAGE:\t");
+
+		for (int i = 0; i < bufrec.size(); ++i)
 			cout << bufrec[i];
+		
+		printf("\n");
+		SetConsoleTextAttribute(hConsole, 2);
 
+		//очистка буфера
+		bufrec.clear();
+
+		//Предлагаем закрыть сервер
+		printf("\tContinue using server? (Y/N)\t\n");
+		char ch; 
+		cin >> ch;
+		if (ch == 'N' || ch == 'n') {
+			CloseHandle(hConsole);
+			return 0;
+		}
+		else printf("\t__________________________________\t\n\n");
+	}
 
 	return 0;
 }

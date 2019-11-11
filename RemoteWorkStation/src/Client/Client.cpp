@@ -2,7 +2,6 @@
 
 #include "pch.h"
 #include "..\Transport\TCPSocket.h"
-#include "..\Transport\TCPClient.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -10,12 +9,14 @@ using namespace std;
 
 int main()
 {
-	TCPClient client;
+	system("COLOR 1C");
+
+	TCPSocket client;
 
 	// Присоединяемся к серверу
 	string name;
 	//name = "localhost";
-	name = "127.1.1.255";
+	name = "127.0.0.1";
 	int port = 65041;
 
 	sockaddr_in s_in = { 0 };//инициализация структуры нулями
@@ -25,22 +26,20 @@ int main()
 	s_in.sin_port = ::htons(port);//преобразуем порядок байт в слове для формата стека TCP/IP
 
 
-	cout << "then will be connection try" << endl;
 	client.connect(s_in);
-	cout << "я  1";
 	TCPSocket::AChar buf;
 	
 	std::string str("Test string");
 
 	buf.assign(str.begin(), str.end());//заполняем буфер для передачи
 
-
-	cout << "я  2";
-
+	Sleep(1000);
 	client.send((const TCPSocket::AChar)buf);//отправляем данные
-	cout << "я  3";
-	
 
+	//очистка вектора
+	buf.clear();
+
+	system("pause");
 	return 0;
 }
 

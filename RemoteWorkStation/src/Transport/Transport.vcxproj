@@ -23,7 +23,7 @@
     <ProjectGuid>{69DF371B-64A4-402B-A54C-D6A76DE1D347}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Transport</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -167,8 +167,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="TCPClient.h" />
-    <ClInclude Include="TCPServer.h" />
     <ClInclude Include="TCPSocket.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -182,8 +180,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TCPClient.cpp" />
-    <ClCompile Include="TCPServer.cpp" />
     <ClCompile Include="TCPSocket.cpp" />
     <ClCompile Include="Transport.cpp" />
   </ItemGroup>
