@@ -20,8 +20,8 @@ protected:
 	virtual string makeReport();
 };
 
-class RunAppliation : Command {
-	RunAppliation(string name, string* parameters) {
+class RunAppliсation : Command {
+	RunAppliсation(string name, string* parameters) {
 		_name = name;
 		_parameters = new string;
 		//тут как-то заполняютя поля итд
@@ -29,14 +29,14 @@ class RunAppliation : Command {
 			_parameters->push_back(static_cast<char*>(parameters[i]));*/
 	}
 
-	~RunAppliation();
+	~RunAppliсation() {};
 
-	string run() {
-		//тут как-то это выполняется
-		return makeReport();
-	}
-	
-	string makeReport() {
-	
-	};
+	#ifndef OS_WIN
+		string run() {
+			//тут как-то это выполняется
+			return makeReport();
+		}
+	#endif
+
+	string makeReport() {};
 };
