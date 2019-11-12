@@ -167,6 +167,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Commands\Commands.vcxproj">
+      <Project>{0fc670e1-ea51-487e-a91e-baad0404724f}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\RemoteWorkStation\RemoteWorkStation.vcxproj">
       <Project>{777ac179-1630-4614-8ac4-80ca67619e8e}</Project>
     </ProjectReference>

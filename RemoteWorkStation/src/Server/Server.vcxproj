@@ -167,6 +167,9 @@
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Commands\Commands.vcxproj">
+      <Project>{0fc670e1-ea51-487e-a91e-baad0404724f}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Transport\Transport.vcxproj">
       <Project>{69df371b-64a4-402b-a54c-d6a76de1d347}</Project>
     </ProjectReference>

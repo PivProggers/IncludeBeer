@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "..\Transport\TCPSocket.h"
 #include "..\Transport\ClassClient.h"
+#include "..\Commands\Command.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -61,8 +62,16 @@ int main()
 
 
 	TCPSocket::AChar buf;
-	std::string str("Test string");
+	std::string str("Executing command");
 	buf.assign(str.begin(), str.end());//заполняем буфер для передачи
+
+	//Нужно придумать логику передачи на сервер и исполнения там
+		//На данном этапе исполнение происходит непосредственно на клиенте или сервере, в зависимости от того, куда следующий код вставить
+		//После вывода на экране предложения, ввести через enter например help dir -- это выведет справку о команде dir в shell'e
+	string one, two;
+	cout << "\tInput command then params" << endl;
+	cin >> one; cin >> two;
+	RunAppliсation command(one.c_str(), two.c_str());
 
 	Sleep(1000);
 	client.SendDataToServer(buf);//отправляем данные

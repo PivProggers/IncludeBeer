@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "..\Transport\TCPSocket.h"
 #include "..\Transport\ClassServer.h"
+#include "..\Commands\Command.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -25,11 +26,12 @@ int main()
 
 		server.InitServer(name, port);
 		Sleep(1000);
-
+	
 		if (server.ReceiveDataFromClient(port, server, client) == 0) {
 			break;
 		}
-	
+		
+
 	}
 
 	return 0;

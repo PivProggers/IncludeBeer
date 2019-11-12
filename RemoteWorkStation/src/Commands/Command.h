@@ -1,5 +1,9 @@
 #pragma once
 #include <string>
+#include "pch.h"
+#include <windows.h>
+#include "ShellAPI.h"
+#include "CommandsApi.h"
 using namespace std;
 
 #ifdef _WIN32
@@ -10,33 +14,27 @@ class Command {
 
 #ifndef OS_WIN
 public:
-	virtual string run();
+	COMMANDS_API virtual string run();
 #else
 #endif
 
 protected:
-	string _name;
-	string* _parameters;
-	virtual string makeReport();
+	const char* _name;
+	const char* _parameters;
+	//COMMANDS_API virtual string makeReport();
 };
 
-class RunAppliñation : Command {
-	RunAppliñation(string name, string* parameters) {
-		_name = name;
-		_parameters = new string;
-		//òóò êàê-òî çàïîëíÿşòÿ ïîëÿ èòä
-		/*for (int i = 0; i < parameters->capacity; ++i)
-			_parameters->push_back(static_cast<char*>(parameters[i]));*/
-	}
-
-	~RunAppliñation() {};
+class RunAppliñation : public Command {
+public:
+	COMMANDS_API RunAppliñation(const char* name, const char* parameters);
+	COMMANDS_API ~RunAppliñation() {};
 
 	#ifndef OS_WIN
-		string run() {
+	COMMANDS_API string run() {
 			//òóò êàê-òî ıòî âûïîëíÿåòñÿ
 			return makeReport();
 		}
 	#endif
 
-	string makeReport() {};
+	//COMMANDS_API string makeReport() {};
 };

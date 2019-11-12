@@ -70,6 +70,8 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 
 		SetConsoleTextAttribute(hConsole, 2);
 
+	
+
 		//Предлагаем закрыть сервер
 		printf("\tContinue using server? (Y/N)\t\n");
 		char ch;
