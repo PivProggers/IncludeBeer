@@ -87,10 +87,10 @@ bool TCPSocket::bind(int port, const sockaddr_in * name)
 	if (this->connected || this->bound || this->listening)//нельзя биндить сокет, который уже был присоединён
 		throw std::exception("Already used");
 
-	if (name)//если была передана структура sockaddr_in
+	if (name) {//если была передана структура sockaddr_in
+		printf("\tSERVER has been started...\t\n");
 		return bound = (0 == ::bind(s, (sockaddr *)name, sizeof(sockaddr_in)));//то биндим на основании её данных, иначе
-
-	printf("\tSERVER has been started...\t\n");
+	}
 
 	sockaddr_in s_in = { 0 };//заполняем структуру значениями по умолчанию
 
@@ -98,6 +98,7 @@ bool TCPSocket::bind(int port, const sockaddr_in * name)
 	s_in.sin_addr.S_un.S_addr = INADDR_ANY;
 	s_in.sin_port = ::htons(port);//кроме порта
 
+	printf("\tSERVER has been started...\t\n");
 	return bound = (0 == ::bind(s, (sockaddr *)&s_in, sizeof(sockaddr_in)));//и биндим на эту структуру
 }
 

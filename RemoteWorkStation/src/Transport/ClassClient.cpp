@@ -18,10 +18,6 @@ Client::Client(const Client& copy) {
 	client = copy;
 }
 
-//Client & Client::operator=(const Client& copy) {
-//
-//}
-
 bool Client::InitClient(const std::string & addr, int port) {
 
 	TCPSocket::connect(addr, port);
