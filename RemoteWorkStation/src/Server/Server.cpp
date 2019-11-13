@@ -31,10 +31,6 @@ int main()
 		if (server.ReceiveDataFromClient(port, server, client) == 0) {
 			break;
 		}
-		
-		else if (server.ReceiveDataFromClient(port, server, client) == -1) {
-			return -1;
-		}
 
 	}
 

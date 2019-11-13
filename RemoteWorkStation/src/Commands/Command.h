@@ -25,13 +25,18 @@ public:
 	COMMANDS_API Command(string name, string parameters);
 	COMMANDS_API Command() {};
 
+	COMMANDS_API string GetName() { return this->_name; }
+	COMMANDS_API string GetParameters() { return this->_parameters; }
+	COMMANDS_API void SetName(string name) { this->_name = name; }
+	COMMANDS_API void GetParameters(string parameters) { this->_parameters = parameters; }
+
 	template<class Archive>
 	void serialize(Archive & archive)
 	{
 		archive(_name, _parameters); // serialize things by passing them to the archive
 	}
 
-public:
+protected:
 	string _name;
 	string _parameters;
 	//COMMANDS_API virtual string makeReport();
@@ -43,20 +48,19 @@ public:
 //Для винды версия в .cpp лежит, там соответственно тоже надо поменять и придумать
 
 
-//class RunAppliсation : public Command {
-//public:
-//	COMMANDS_API RunAppliсation(const char* name, const char* parameters);
-////	COMMANDS_API RunAppliсation(class Archive & ar);
-//	COMMANDS_API ~RunAppliсation() {};
-//
-//		
-//
-//	#ifndef OS_WIN
-//	COMMANDS_API string run() {
-//			//тут как-то это выполняется
-//			return makeReport();
-//		}
-//	#endif
-//
-//	//COMMANDS_API string makeReport() {};
-//};
+class RunAppliсation : public Command {
+public:
+	COMMANDS_API RunAppliсation(string name, string parameters);
+	COMMANDS_API ~RunAppliсation() {};
+
+		
+
+	#ifndef OS_WIN
+	COMMANDS_API string run() {
+			//тут как-то это выполняется
+			return makeReport();
+		}
+	#endif
+
+	//COMMANDS_API string makeReport() {};
+};

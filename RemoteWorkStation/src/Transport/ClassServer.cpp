@@ -7,6 +7,10 @@
 #include <fstream>
 #include <exception>
 #include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <iterator>
 using namespace std;
 
 Server::Server(void) {
@@ -49,7 +53,7 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 			// Читаем переданных клиентом данные
 			bufrec.resize(len);
 			bufrec = client.receive();
-
+			
 			//крутим цикл, пока размер принятного буфера перестанет быть нулем
 			if (bufrec.size() != 0)
 				break;
@@ -62,20 +66,40 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 		SetConsoleTextAttribute(hConsole, 12);
 		printf("\tCLIENT MESSAGE:\t");
 
-		//вывод содержимого буфера
+		//_________вывод содержимого буфера__________
+		std::stringstream ss(std::string(bufrec.begin(), bufrec.end()));
+
+		//вывод содержимого xml
+		//cсоздаем объект класса и открываем поток на чтение
+		Command com;
+
+		//deserialize block
+		{
+			cereal::XMLInputArchive ar(ss);
+			//чтение узла Command
+			ar(cereal::make_nvp("Command", com));
+			//вывод параметров
+			SetConsoleTextAttribute(hConsole, 11);
+			cout << "NAME OF COM: " << com.GetName() << " PARAMS: " << com.GetParameters() << endl;
+		}
+
+		RunAppliсation command(com.GetName(), com.GetParameters());
+
+		// Display
+		/*std::cout << ss.str() << std::endl;
 		for (int i = 0; i < bufrec.size(); ++i)
-			cout << bufrec[i];
+			cout << bufrec[i];*/
 
 		printf("\n");
+
 		//очистка буфера
 		bufrec.clear();
 
 		SetConsoleTextAttribute(hConsole, 2);
 
-		SetConsoleTextAttribute(hConsole, 11);
 
 
-			//вывод содержимого xml
+	/*		//вывод содержимого xml
 		//cсоздаем объект класса и открываем поток на чтение файла
 		Command com;
 		ifstream file("out.xml");
@@ -91,15 +115,13 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 			//вывод параметров
 			cout <<"\tNAME OF COM: " << com._name << " PARAMS: " << com._parameters << endl;
 		}
-		
-
-		SetConsoleTextAttribute(hConsole, 2);
+		*/
 
 		//Предлагаем закрыть сервер
-		printf("\tContinue using server? (Y/N)\t\n");
+		printf("\tContinue using server? (Y/N)\t  ");
 		char ch;
 		cin >> ch;
-		if (ch == 'N' || ch == 'n') {
+		if (ch == 'N' || ch == 'n' || ch == 'NO'  || ch == 'no' || ch == 'No') {
 			CloseHandle(hConsole);
 			return server.CloseServer();
 		}

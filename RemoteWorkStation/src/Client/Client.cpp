@@ -48,7 +48,7 @@ using namespace std;
 
 int main() 
 {
-	system("COLOR 1C");
+	system("COLOR 0C");
 
 	Client client;
 	// Присоединяемся к серверу
@@ -62,8 +62,40 @@ int main()
 	client.InitClient(name, port);
 
 
+		//здесь представлена сериализация команды в XML "out.xml" в debug'e
+	//ввод содержимого в xml
+	string command, parameters;
+
+
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, 10);
+
+	cout << " Input your command: first string -- name of command, second string -- name of parameters" << endl;
+	cout << " Input name of command, please: "; 
+	cin >> command; //для примера "help"
+	cout << endl;
+	cout << " Input parameters, please: ";
+	cin >> parameters; //для примера "dir"
+	cout << endl;
+
+	SetConsoleTextAttribute(hConsole, 12);
+
+	//cсоздаем объект класса из полученных данных и открываем поток на запись файла
+	Command com(command, parameters);
+	//std::ofstream file("out.xml");
+	stringstream ss;
+	//serialize block
+	{
+		cereal::XMLOutputArchive archive(ss);
+		//записываем данные в узел Command
+		archive(cereal::make_nvp("Command", com));
+	}
+	//записываем
+	string str = ss.str();
+	//file.flush();
+
 	TCPSocket::AChar buf;
-	std::string str("Executing command");
+	//std::string str("Executing command");
 	buf.assign(str.begin(), str.end());//заполняем буфер для передачи
 
 	//Нужно придумать логику передачи на сервер и исполнения там
@@ -76,19 +108,6 @@ int main()
 	
 
 
-		//здесь представлена сериализация команды в XML "out.xml" в debug'e
-	//ввод содержимого в xml
-	//cсоздаем объект класса и открываем поток на запись файла
-	Command com("help", "dir");
-	std::ofstream file("out.xml");
-	//deserialize block
-	{
-		cereal::XMLOutputArchive archive(file);
-		//записываем данные в узел Command
-		archive(cereal::make_nvp("Command", com));
-	}
-	//записываем в файл
-	file.flush();
 
 	Sleep(1000);
 	client.SendDataToServer(buf);//отправляем данные
