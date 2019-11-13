@@ -4,9 +4,6 @@
 #include <windows.h>
 #include "ShellAPI.h"
 #include "CommandsApi.h"
-//#include "..\..\cereal-1.3.0\include\cereal\cereal.hpp"
-//#include "..\..\cereal-1.3.0\include\cereal\access.hpp"
-//#include "..\..\cereal-1.3.0\include\cereal\macros.hpp"
 #include "cereal\archives\xml.hpp"
 #include "cereal\types\vector.hpp"
 
@@ -39,6 +36,12 @@ public:
 	string _parameters;
 	//COMMANDS_API virtual string makeReport();
 };
+
+
+//Нужно придумать логику передачи на сервер и исполнения там
+//Вот это г... снизу должно принимать в себя объект типа Command после того как он десериализован, и выполнять все. 
+//Для винды версия в .cpp лежит, там соответственно тоже надо поменять и придумать
+
 
 //class RunAppliсation : public Command {
 //public:
