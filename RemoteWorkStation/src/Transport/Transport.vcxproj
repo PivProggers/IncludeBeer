@@ -187,6 +187,11 @@
     <ClCompile Include="TCPSocket.cpp" />
     <ClCompile Include="Transport.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Commands\Commands.vcxproj">
+      <Project>{0fc670e1-ea51-487e-a91e-baad0404724f}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

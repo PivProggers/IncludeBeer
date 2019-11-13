@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <fstream>
 using namespace std;
 
 //ЭТО РАБОЧАЯ ВЕРСИЯ ТОЛЬКО С КЛАССОМ TCPSocket
@@ -68,10 +69,26 @@ int main()
 	//Нужно придумать логику передачи на сервер и исполнения там
 		//На данном этапе исполнение происходит непосредственно на клиенте или сервере, в зависимости от того, куда следующий код вставить
 		//После вывода на экране предложения, ввести через enter например help dir -- это выведет справку о команде dir в shell'e
-	string one, two;
-	cout << "\tInput command then params" << endl;
-	cin >> one; cin >> two;
-	RunAppliсation command(one.c_str(), two.c_str());
+										/*string one, two;
+										cout << "\tInput command then params" << endl;
+										cin >> one; cin >> two;
+										RunAppliсation command(one.c_str(), two.c_str());*/
+	
+
+
+		//здесь представлена сериализация команды в XML "out.xml" в debug'e
+	//ввод содержимого в xml
+	//cсоздаем объект класса и открываем поток на запись файла
+	Command com("help", "dir");
+	std::ofstream file("out.xml");
+	//deserialize block
+	{
+		cereal::XMLOutputArchive archive(file);
+		//записываем данные в узел Command
+		archive(cereal::make_nvp("Command", com));
+	}
+	//записываем в файл
+	file.flush();
 
 	Sleep(1000);
 	client.SendDataToServer(buf);//отправляем данные

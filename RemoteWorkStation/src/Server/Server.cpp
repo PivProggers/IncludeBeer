@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <conio.h>
+#include <fstream>
 using namespace std;
 
 //ЭТО ВЕРСИЯ С КЛАССОМ Server
@@ -31,6 +32,9 @@ int main()
 			break;
 		}
 		
+		else if (server.ReceiveDataFromClient(port, server, client) == -1) {
+			return -1;
+		}
 
 	}
 

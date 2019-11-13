@@ -3,6 +3,8 @@
 #include "stdafx.h"
 #include "TCPSocket.h"
 #include "ClassServer.h"
+#include "..\Commands\Command.h"
+#include <fstream>
 #include <exception>
 #include <iostream>
 using namespace std;
@@ -70,7 +72,28 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 
 		SetConsoleTextAttribute(hConsole, 2);
 
-	
+		SetConsoleTextAttribute(hConsole, 11);
+
+
+			//вывод содержимого xml
+		//cсоздаем объект класса и открываем поток на чтение файла
+		Command com;
+		ifstream file("out.xml");
+			if (!file.is_open()) {
+				cout << "Oops!" << endl;
+				return -1;
+			}
+		//deserialize block
+		{
+			cereal::XMLInputArchive ar(file);
+			//чтение узла Command
+			ar(cereal::make_nvp("Command", com));
+			//вывод параметров
+			cout <<"\tNAME OF COM: " << com._name << " PARAMS: " << com._parameters << endl;
+		}
+		
+
+		SetConsoleTextAttribute(hConsole, 2);
 
 		//Предлагаем закрыть сервер
 		printf("\tContinue using server? (Y/N)\t\n");
