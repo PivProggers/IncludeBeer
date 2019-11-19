@@ -1,12 +1,9 @@
 #pragma once
-#include <string>
 #include "pch.h"
-#include <windows.h>
-#include "ShellAPI.h"
 #include "CommandsApi.h"
 #include "cereal\archives\xml.hpp"
 #include "cereal\types\vector.hpp"
-
+#include "ShellAPI.h"
 
 using namespace std;
 
@@ -50,6 +47,8 @@ protected:
 
 class RunAppliсation : public Command {
 public:
+	//здесь реализация из си функций? если да, то нам не нужно для разынх ос переопределеять
+
 #ifdef OS_WIN
 	COMMANDS_API RunAppliсation(string name, string parameters);
 #else 
