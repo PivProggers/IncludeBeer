@@ -66,7 +66,7 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 		SetConsoleTextAttribute(hConsole, 12);
 		printf("\tCLIENT MESSAGE:\t");
 
-		//_________вывод содержимого буфера__________
+		//_________вывод содержимого буфера__________//
 		std::stringstream ss(std::string(bufrec.begin(), bufrec.end()));
 
 		//вывод содержимого xml

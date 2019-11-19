@@ -50,7 +50,11 @@ protected:
 
 class RunAppliñation : public Command {
 public:
+#ifdef OS_WIN
 	COMMANDS_API RunAppliñation(string name, string parameters);
+#else 
+	COMMANDS_API RunAppliñation();
+#endif
 	COMMANDS_API ~RunAppliñation() {};
 
 		
