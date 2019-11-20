@@ -4,11 +4,10 @@
 #include "..\Transport\TCPSocket.h"
 #include "..\Transport\ClassClient.h"
 #include "..\Commands\Command.h"
-#include <iostream>
-#include <vector>
-#include <string>
-#include <fstream>
 using namespace std;
+
+
+
 
 //ЭТО РАБОЧАЯ ВЕРСИЯ ТОЛЬКО С КЛАССОМ TCPSocket
 
@@ -43,6 +42,16 @@ using namespace std;
 
 /*_______________________________________________________________*/
 
+
+
+void ShowFillField(const char* sOutName, const char* sOutParameters,  string & command, string & parameters) {
+	cout << sOutName;
+	getline(cin, command);//для примера "help"
+	//cout << endl;
+	cout << sOutParameters;
+	getline(cin, parameters);
+	//cout << endl;
+}
 
 //ЭТО ВЕРСИЯ С КЛАССОМ Client
 void print_menu() {
@@ -103,52 +112,35 @@ int main()
 		variant = get_variant(5); // получаем номер выбранного пункта меню
 
 		switch (variant) {
-		case 1:
-			cout << " Input name of the application, please: ";
-			getline(cin, command);//для примера "help"
-			cout << endl;
-			cout << " Input parameters, please: ";
-			getline(cin, parameters);
-			cout << endl;
-
+		case 1 :
+			ShowFillField(" Input name of the application, please: ", " Input parameters, please: ", command, parameters);
 			break;
 		
 			//не реализовано
 		case 2:
-			cout << " Input name of file, please: ";
-			getline(cin, command);//для примера "help"
-			cout << endl;
-			cout << " Input directory, please: ";
-			getline(cin, parameters);
-			cout << endl;
+			ShowFillField(" Input name of file, please: ", " Input directory, please: ", command, parameters);
 			break;
 			
 			//не реализовано
 		case 3:
-			cout << " Input  name of file, please: ";
-			getline(cin, command);//для примера "help"
-			cout << endl;
-			cout << " Input directory, please: ";
-			getline(cin, parameters);
-			cout << endl;
+			ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
 			break;
 
 			//не реализовано
 		case 4:
 			string s = "del"; string com;
-			cout << " Input  name of file, please: ";
-			getline(cin, com);
-			cout << " Input directory, please: ";
-			getline(cin, parameters);
-			cout << endl;
+			ShowFillField(" Input  name of file, please: ", " Input directory, please: ", com, parameters);
 			command = s +" "+ parameters + "\\" + com;
 			parameters = "";
 			cout << command << endl;
 			cout << endl;
 			break;
 		}
-
-	//	if (variant != 5) {
+		if (variant < 1 || variant>4)
+		{
+			cout << "wrong parameter" << endl;
+			return -1;
+		}
 
 			SetConsoleTextAttribute(hConsole, 12);
 
@@ -156,6 +148,7 @@ int main()
 			Command com(command, parameters);
 			//std::ofstream file("out.xml");
 			stringstream ss;
+
 			//serialize block
 			{
 				cereal::XMLOutputArchive archive(ss);
@@ -172,7 +165,7 @@ int main()
 
 			Sleep(1000);
 			client.SendDataToServer(buf);//отправляем данные
-
+			
 										 //очистка вектора
 			buf.clear();
 			system("pause"); // задерживаем выполнение, чтобы пользователь мог увидеть результат выполнения выбранного пункта

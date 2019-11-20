@@ -12,12 +12,6 @@ using namespace std;
 #endif
 
 class Command {
-
-#ifndef OS_WIN
-public:
-	COMMANDS_API virtual string run();
-#else
-#endif
 public:
 	COMMANDS_API Command(string name, string parameters);
 	COMMANDS_API Command() {};
@@ -33,9 +27,12 @@ public:
 		archive(_name, _parameters); // serialize things by passing them to the archive
 	}
 
+	string Run();
+	string Makereport();
 protected:
 	string _name;
 	string _parameters;
+	string _error_report = "0";
 	//COMMANDS_API virtual string makeReport();
 };
 
@@ -47,23 +44,28 @@ protected:
 
 class RunAppliсation : public Command {
 public:
-	//здесь реализация из си функций? если да, то нам не нужно для разынх ос переопределеять
-
-#ifdef OS_WIN
 	COMMANDS_API RunAppliсation(string name, string parameters);
-#else 
-	COMMANDS_API RunAppliсation();
-#endif
 	COMMANDS_API ~RunAppliсation() {};
+	COMMANDS_API string Run();
 
-		
 
-	#ifndef OS_WIN
-	COMMANDS_API string run() {
-			//тут как-то это выполняется
-			return makeReport();
-		}
-	#endif
+	//COMMANDS_API string makeReport() {};
+};
 
+class DelAppliсation : public Command {
+public:
+	COMMANDS_API DelAppliсation(string name, string parameters);
+	COMMANDS_API ~DelAppliсation() {};
+	COMMANDS_API string Run();
+
+
+	//COMMANDS_API string makeReport() {};
+};
+
+class SendFile : public Command {
+public:
+	COMMANDS_API SendFile(string name, string parameters);
+	COMMANDS_API ~SendFile() {};
+	COMMANDS_API string Run();
 	//COMMANDS_API string makeReport() {};
 };
