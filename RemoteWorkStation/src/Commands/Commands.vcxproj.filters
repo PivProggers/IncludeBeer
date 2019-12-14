@@ -38,9 +38,6 @@
     <ClCompile Include="CommandsInitialization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RunApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

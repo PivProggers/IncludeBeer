@@ -1,11 +1,12 @@
+#include "pch.h"
 #include "Command.h"
 
-RunAppliñation::RunAppliñation(string name, string parameters) {
+RunApplication::RunApplication(string name, string parameters) {
 	_name = name;
 	_parameters = parameters;
 }
 
-string RunAppliñation::Run() {
+string RunApplication::Run() {
 	if (_name.empty() || _parameters.empty()) {
 		cout << "Initialize object of the class before" << endl;
 		return "0";

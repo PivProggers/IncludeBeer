@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "TransportApi.h"
+#include <string>
 
 #define _CRT_SECURE_NO_WARNINGS
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
@@ -31,7 +32,6 @@ protected:
 	bool bound, listening, connected;
 	int * iLinks;
 	SOCKET s;
-
 public:
 	TRANSPORT_API TCPSocket(void);
 	TRANSPORT_API TCPSocket(const TCPSocket & copy);
