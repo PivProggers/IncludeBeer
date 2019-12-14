@@ -53,50 +53,66 @@ int main()
 	//ввод содержимого в xml
 	string command, parameters;
 
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 10);
 
 	//После вывода на экране предложения, ввести через enter например help dir -- это выведет справку о команде dir в shell'e
 	int variant;
-	Command commandGranny;
+	//Command commandGranny;
 	do {
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, 10);
+
 		print_menu(); // выводим меню на экран
 		
 		variant = get_variant(5); // получаем номер выбранного пункта меню
 
 		switch (variant) {
 		case 1 :
-			ShowFillField(" Input name of the application, please: ", " Input parameters, please: ", command, parameters);
-			RunAppliсation comObj (command, parameters);
-			//не реализовано
-			break;
+			{
+				ShowFillField(" Input name of the application, please: ", " Input parameters, please: ", command, parameters);
+				RunApplication comObj(command, parameters);
+				//не реализовано
+				break;
+			}
 		case 2:
-			ShowFillField(" Input name of file, please: ", " Input directory, please: ", command, parameters);
-			SendFile comObj(command, parameters);
-			//не реализовано
-			break;
+			{
+				ShowFillField(" Input name of file, please: ", " Input directory, please: ", command, parameters);
+				//SendFile comObj(command, parameters);
+				//не реализовано
+				break;
+			}
 		case 3:
-			ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
-			RecieveFile comObj(command, parameters);
-			//не реализовано
-			break;
+			{
+				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
+				//RecieveFile comObj(command, parameters);
+				//не реализовано
+				break;
+			}
 		case 4:
-			ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
-			DelFile comObj(command, parameters);
-			/*string s = "del"; string com;
-			ShowFillField(" Input  name of file, please: ", " Input directory, please: ", com, parameters);
-			command = s +" "+ parameters + "\\" + com;
-			parameters = "";
-			cout << command << endl;
-			cout << endl;*/
-			break;
+			{
+				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
+				//DelFile comObj(command, parameters);
+				
+				/*string s = "del"; string com;
+				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", com, parameters);
+				command = s +" "+ parameters + "\\" + com;
+				parameters = "";
+				cout << command << endl;
+				cout << endl;*/
+				break;
+			}
+		default: //при закрытии клиента сразу после вызова через нажатие 5 вылетает исключение
+			{
+				client.CloseClient();
+				return 0;
+			}
+
 		}
 		if (variant !=5)
 		{ 
 			SetConsoleTextAttribute(hConsole, 12);
 
 			//cсоздаем объект класса из полученных данных и открываем поток на запись файла
-			Command com(command, parameters);
+			Command comObj(command, parameters);
 			//std::ofstream file("out.xml");
 			stringstream ss;
 
@@ -104,7 +120,7 @@ int main()
 			{
 				cereal::XMLOutputArchive archive(ss);
 				//записываем данные в узел Command
-				archive(cereal::make_nvp("Command", com));
+				archive(cereal::make_nvp("Command", comObj));
 			}
 			//записываем
 			string str = ss.str();
@@ -122,11 +138,12 @@ int main()
 			system("pause"); // задерживаем выполнение, чтобы пользователь мог увидеть результат выполнения выбранного пункта
 			system("cls");
 		}
-		else
+		/*else
 		{
+
 			client.CloseClient();
 			return 0;
-		}
+		}*/
 	} while (true);
 }
 

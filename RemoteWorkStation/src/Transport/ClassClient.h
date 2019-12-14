@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "TransportApi.h"
 #include "TCPSocket.h"
+#include <string>
 #define _CRT_SECURE_NO_WARNINGS
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 

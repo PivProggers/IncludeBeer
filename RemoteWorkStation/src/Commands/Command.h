@@ -27,8 +27,8 @@ public:
 		archive(_name, _parameters); // serialize things by passing them to the archive
 	}
 
-	string Run();
-	string Makereport();
+//	virtual string Run() {};
+	//string Makereport();
 protected:
 	string _name;
 	string _parameters;
@@ -42,10 +42,10 @@ protected:
 //Для винды версия в .cpp лежит, там соответственно тоже надо поменять и придумать
 
 
-class RunAppliсation : public Command {
+class RunApplication : public Command {
 public:
-	COMMANDS_API RunAppliсation(string name, string parameters);
-	COMMANDS_API ~RunAppliсation() {};
+	COMMANDS_API RunApplication(string name, string parameters);
+	COMMANDS_API ~RunApplication() {};
 	COMMANDS_API string Run();
 
 
@@ -66,7 +66,7 @@ class SendFile : public Command {
 public:
 	COMMANDS_API SendFile(string name, string parameters);
 	COMMANDS_API ~SendFile() {};
-	COMMANDS_API string Run();
+	//COMMANDS_API string Run();
 	//COMMANDS_API string makeReport() {};
 };
 
@@ -74,6 +74,6 @@ class RecieveFile : public Command {
 public:
 	COMMANDS_API RecieveFile(string name, string parameters);
 	COMMANDS_API ~RecieveFile() {};
-	COMMANDS_API string Run();
+	//COMMANDS_API string Run();
 	//COMMANDS_API string makeReport() {};
 };

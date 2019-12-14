@@ -28,7 +28,7 @@ int main()
 		server.InitServer(name, port);
 		Sleep(1000);
 	
-		if (server.ReceiveDataFromClient(port, server, client) == 0) {
+		if (!server.ReceiveDataFromClient(port, server, client)) {
 			break;
 		}
 

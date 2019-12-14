@@ -83,7 +83,7 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 			cout << "NAME OF COM: " << com.GetName() << " PARAMS: " << com.GetParameters() << endl;
 		}
 
-		RunAppliñation command(com.GetName(), com.GetParameters());
+		RunApplication command(com.GetName(), com.GetParameters());
 
 		// Display
 		/*std::cout << ss.str() << std::endl;
