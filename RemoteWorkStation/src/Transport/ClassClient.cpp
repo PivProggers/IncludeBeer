@@ -33,5 +33,6 @@ bool Client::SendDataToServer(const AChar & inbuf){
 int Client::CloseClient() {
 
 	printf("\tShutdown CLIENT...\t\n");
+	Sleep(2000);
 	return 0;
 }
