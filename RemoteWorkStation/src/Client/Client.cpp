@@ -4,6 +4,7 @@
 #include "..\Commands\Command.h"
 using namespace std;
 
+#define countOfConnectionAttempts 5
 
 void ShowFillField(const char* sOutName, const char* sOutParameters,  string & command, string & parameters) {
 	cout << sOutName;
@@ -46,9 +47,18 @@ int main()
 	string name;
 	name = "127.0.0.1"; //"192.168.1.48";
 	int port = 65041;
-
-	client.InitClient(name, port);
-
+	
+	for(int attempt = 1; attempt <= countOfConnectionAttempts; attempt++) {
+		cout << "Connection attempt #" << attempt << endl;
+		if (client.InitClient(name, port)) {
+			break;
+		}
+		if (attempt == 5) {
+			cout << "Unable to connect to server!" << endl;
+			return client.CloseClient();
+		}
+	}
+	
 	//здесь представлена сериализация команды в XML "out.xml" в debug'e
 	//ввод содержимого в xml
 	string command, parameters;

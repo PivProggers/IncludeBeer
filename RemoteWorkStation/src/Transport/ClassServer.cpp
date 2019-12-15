@@ -118,7 +118,7 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 		*/
 
 		//Предлагаем закрыть сервер
-		printf("\tContinue using server? (Y/N)\t  ");
+		/*printf("\tContinue using server? (Y/N)\t  ");
 		char ch;
 		cin >> ch;
 		if (ch == 'N' || ch == 'n' || ch == 'NO'  || ch == 'no' || ch == 'No') {
@@ -127,7 +127,7 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 		}
 		else {
 			printf("\t__________________________________\t\n\n");
-		}
+		}*/
 	}
 }
 
