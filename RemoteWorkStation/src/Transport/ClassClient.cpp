@@ -32,7 +32,7 @@ bool Client::SendDataToServer(const AChar & inbuf){
 
 int Client::CloseClient() {
 
-	printf("\tShutdown CLIENT...\t\n");
+	cout << "\tShutdown CLIENT...\t" << endl;
 	Sleep(2000);
 	return 0;
 }

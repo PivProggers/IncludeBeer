@@ -35,23 +35,23 @@ bool Server::InitServer(const std::string & addr, int port) {
 int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 
 	TCPSocket::AChar bufrec;
-	int len = 1024;
+	//int len = 1024;
 	while (true) {
 	tryout:
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		printf("\tAccepting new connection...");
+		cout<< "\tAccepting new connection...";
 
 		SetConsoleTextAttribute(hConsole, 106);
-		printf("\!_OPEN CLIENT_!\t\n");
+		cout << "\!_OPEN CLIENT_!\t" << endl;
 		SetConsoleTextAttribute(hConsole, 2);
 
 		while (true)
 		{
 			//переменная для управления выводом сервера
 			client = TCPSocket::accept(port);
-
+		acception:
 			// Читаем переданных клиентом данные
-			bufrec.resize(len);
+		//	bufrec.resize(len);
 			bufrec = client.receive();
 			
 			//крутим цикл, пока размер принятного буфера перестанет быть нулем
@@ -60,14 +60,16 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 
 			// Отправляем клиенту полученную от него же строку
 			if (!client.send(bufrec)) {
+				SetConsoleTextAttribute(hConsole, 12);
 				cout << "Client closed connection" << endl;
+				SetConsoleTextAttribute(hConsole, 2);
 				goto tryout;
 			}
 		}
 
 		//вывод сообщения клиента
 		SetConsoleTextAttribute(hConsole, 12);
-		printf("\tCLIENT MESSAGE:\t");
+		cout << "\tCLIENT MESSAGE:\t" << endl;
 
 		//_________вывод содержимого буфера__________//
 		std::stringstream ss(std::string(bufrec.begin(), bufrec.end()));
@@ -87,7 +89,7 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 		}
 
 		RunApplication command(com.GetName(), com.GetParameters());
-
+		command.Run();
 		// Display
 		/*std::cout << ss.str() << std::endl;
 		for (int i = 0; i < bufrec.size(); ++i)
@@ -99,7 +101,8 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 		bufrec.clear();
 
 		SetConsoleTextAttribute(hConsole, 2);
-
+		if (this->connected) goto tryout;
+		else goto acception;
 
 
 	/*		//вывод содержимого xml
@@ -135,7 +138,6 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 }
 
 int Server::CloseServer() {
-
-	printf("\tShutdown SERVER...\t\n");
+	cout << "\tShutdown SERVER...\t" << endl;
 	return 0;
 }

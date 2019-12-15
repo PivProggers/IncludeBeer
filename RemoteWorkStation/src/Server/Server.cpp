@@ -67,37 +67,4 @@ int main()
 			bufrec = client.receive();
 
 			if (bufrec.size() != 0)
-				break;
-
-			// Отправляем клиенту полученную от него же строку
-			client.send(bufrec);
-		}
-
-		//вывод сообщения клиента
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(hConsole, 12);
-		printf("\tCLIENT MESSAGE:\t");
-
-		for (int i = 0; i < bufrec.size(); ++i)
-			cout << bufrec[i];
-		
-		printf("\n");
-		SetConsoleTextAttribute(hConsole, 2);
-
-		//очистка буфера
-		bufrec.clear();
-
-		//Предлагаем закрыть сервер
-		printf("\tContinue using server? (Y/N)\t\n");
-		char ch; 
-		cin >> ch;
-		if (ch == 'N' || ch == 'n') {
-			CloseHandle(hConsole);
-			return 0;
-		}
-		else printf("\t__________________________________\t\n\n");
-	}
-
-	return 0;
 }
-*/
