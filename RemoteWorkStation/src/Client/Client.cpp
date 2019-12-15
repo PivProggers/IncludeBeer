@@ -69,28 +69,25 @@ int main()
 		case 1 :
 			{
 				ShowFillField(" Input name of the application, please: ", " Input parameters, please: ", command, parameters);
-				RunApplication comObj(command, parameters);
-				//не реализовано
+				RunApplication* comObj = new RunApplication(command, parameters);
 				break;
 			}
 		case 2:
 			{
 				ShowFillField(" Input name of file, please: ", " Input directory, please: ", command, parameters);
-				//SendFile comObj(command, parameters);
-				//не реализовано
+				SendFile* comObj = new SendFile(command, parameters);
 				break;
 			}
 		case 3:
 			{
 				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
-				//RecieveFile comObj(command, parameters);
-				//не реализовано
+				RecieveFile* comObj = new RecieveFile(command, parameters);
 				break;
 			}
 		case 4:
 			{
 				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
-				//DelFile comObj(command, parameters);
+				DelFile* comObj = new DelFile(command, parameters);
 				
 				/*string s = "del"; string com;
 				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", com, parameters);
@@ -111,7 +108,7 @@ int main()
 		{ 
 			SetConsoleTextAttribute(hConsole, 12);
 
-			//cсоздаем объект класса из полученных данных и открываем поток на запись файла
+			//создаем объект класса из полученных данных и открываем поток на запись файла
 			Command comObj(command, parameters);
 			//std::ofstream file("out.xml");
 			stringstream ss;
@@ -132,10 +129,13 @@ int main()
 
 			Sleep(1000);
 			client.SendDataToServer(buf);//отправляем данные
-				 
+
+			TCPSocket::AChar recBuf = client.receive();
+
 			buf.clear();//очистка вектора
-		//	delete comObj;
+			delete &comObj;
 			system("pause"); // задерживаем выполнение, чтобы пользователь мог увидеть результат выполнения выбранного пункта
+
 			system("cls");
 		}
 		/*else
@@ -145,5 +145,13 @@ int main()
 			return 0;
 		}*/
 	} while (true);
+
+	return 0;
 }
 
+void Ofcskaya(int functia) //cashback na vse i na eto in na eto i na eto i na to
+{
+	//		1/0			    2/1/0				1/0			  4/3/2/1			/object of the class/	/size of file/		?/ count of parts of the file/		/file/
+	//	 whosends	containtsfile/authori	  success		numberOfCommand										
+	TCPSocket::AChar buf = {};
+}

@@ -16,9 +16,12 @@ string RunApplication::Run() {
 	result += " ";
 	result += _parameters.c_str();
 
+#ifdef _WIN32
 	if (ShellExecuteA(NULL, "open", "C:\\WINDOWS\\system32\\cmd.exe", result.c_str(), 0, SW_SHOWNORMAL) > (HINSTANCE)32) {
 		_error_report.clear();
 		_error_report = "Succesfully opened file";
 	}
+#endif
 
+	return 0;
 }
