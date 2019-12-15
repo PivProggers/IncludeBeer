@@ -35,7 +35,6 @@ bool Server::InitServer(const std::string & addr, int port) {
 int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 
 	TCPSocket::AChar bufrec;
-	//int len = 1024;
 	while (true) {
 	tryout:
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -51,7 +50,6 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 			client = TCPSocket::accept(port);
 		acception:
 			// Читаем переданных клиентом данные
-		//	bufrec.resize(len);
 			bufrec = client.receive();
 			
 			//крутим цикл, пока размер принятного буфера перестанет быть нулем
@@ -90,12 +88,7 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 
 		RunApplication command(com.GetName(), com.GetParameters());
 		command.Run();
-		// Display
-		/*std::cout << ss.str() << std::endl;
-		for (int i = 0; i < bufrec.size(); ++i)
-			cout << bufrec[i];*/
-
-		printf("\n");
+		cout << endl;
 
 		//очистка буфера
 		bufrec.clear();
@@ -103,25 +96,6 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 		SetConsoleTextAttribute(hConsole, 2);
 		if (this->connected) goto tryout;
 		else goto acception;
-
-
-	/*		//вывод содержимого xml
-		//cсоздаем объект класса и открываем поток на чтение файла
-		Command com;
-		ifstream file("out.xml");
-			if (!file.is_open()) {
-				cout << "Oops!" << endl;
-				return -1;
-			}
-		//deserialize block
-		{
-			cereal::XMLInputArchive ar(file);
-			//чтение узла Command
-			ar(cereal::make_nvp("Command", com));
-			//вывод параметров
-			cout <<"\tNAME OF COM: " << com._name << " PARAMS: " << com._parameters << endl;
-		}
-		*/ 
 	}
 }
 
