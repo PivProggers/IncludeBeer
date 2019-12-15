@@ -5,16 +5,27 @@ using namespace std;
 string SendFile::Run()
 {
 #ifdef _WIN32
-	string line;
-	ifstream file(_parameters.c_str()); // окрываем файл для чтения
-	if (file.is_open())
-	{	
-		stringstream buf;
-		while (getline(file, line))
-		{
-			buf << line;
-		}
+	HANDLE h_in = CreateFile((LPCWSTR)_parameters.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+	if (h_in == INVALID_HANDLE_VALUE)
+	{
+		_error_report = "0" + GetLastError();
+		return "0";
 	}
-	file.close();     // закрываем файл
+
+	BOOL i = FALSE;
+	LPVOID buffer[BUF_SIZE] = { 0 };
+	DWORD red = 0;
+	string resultOfReading;
+	do
+	{
+		i = ReadFile(h_in, buffer, BUF_SIZE, &red, NULL);
+		if (i && red > 0)
+			resultOfReading += (const char*)buffer;
+	} while (i && red != 0);
+
+	return resultOfReading;
+#else
+
 #endif
+
 }

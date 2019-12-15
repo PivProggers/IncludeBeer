@@ -22,7 +22,7 @@ int main()
 	while (true) {
 		// Присоединяемся к серверу
 		string name;
-		name = "127.0.0.1";
+		name = "10.211.55.1";
 		int port = 65041;
 
 		server.InitServer(name, port);
