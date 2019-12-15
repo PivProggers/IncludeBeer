@@ -45,8 +45,8 @@ int main()
 	Client client;
 	// Присоединяемся к серверу
 	string name;
-	name = "192.168.1.34"; //"192.168.1.48";
-	name = "127.0.0.1";// "127.0.0.1"; //"192.168.1.48";
+//	name = "192.168.1.34"; //"192.168.1.48";
+	name = "192.168.1.36";//"192.168.1.36";// "127.0.0.1"; //"192.168.1.48";
 	int port = 65041;
 	
 	for(int attempt = 1; attempt <= countOfConnectionAttempts; attempt++) {

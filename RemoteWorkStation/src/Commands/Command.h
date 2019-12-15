@@ -64,11 +64,11 @@ public:
 	//COMMANDS_API string makeReport() {};
 };
 
-class RecieveFile : public Command {
-public:
-	COMMANDS_API RecieveFile(string name, string parameters) {};
-	COMMANDS_API ~RecieveFile() {};
-	COMMANDS_API string Run();
-	//COMMANDS_API string Run();
-	//COMMANDS_API string makeReport() {};
-};
+//class RecieveFile : public Command {
+//public:
+//	COMMANDS_API RecieveFile(string name, string parameters) {};
+//	COMMANDS_API ~RecieveFile() {};
+//	COMMANDS_API string Run();
+//	//COMMANDS_API string Run();
+//	//COMMANDS_API string makeReport() {};
+//};
