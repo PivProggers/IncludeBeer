@@ -56,10 +56,11 @@ public:
 	//COMMANDS_API string makeReport() {};
 };
 
-class SendFile : public Command {
+class SendFile : protected Command {
 public:
 	COMMANDS_API SendFile(string name, string parameters);
 	COMMANDS_API ~SendFile() {};
+	COMMANDS_API string Run();
 	//COMMANDS_API string Run();
 	//COMMANDS_API string makeReport() {};
 };
@@ -68,6 +69,7 @@ class RecieveFile : public Command {
 public:
 	COMMANDS_API RecieveFile(string name, string parameters);
 	COMMANDS_API ~RecieveFile() {};
+	COMMANDS_API string Run();
 	//COMMANDS_API string Run();
 	//COMMANDS_API string makeReport() {};
 };

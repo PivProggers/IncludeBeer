@@ -13,5 +13,6 @@
 #include <string>
 #include <stdio.h>
 #include "ShellAPI.h"
+#include <fstream>
 
 #endif //PCH_H
