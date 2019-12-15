@@ -35,7 +35,7 @@ bool Server::InitServer(const std::string & addr, int port) {
 int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 
 	TCPSocket::AChar bufrec;
-	int len = 1024;
+	//int len = 1024;
 	while (true) {
 	tryout:
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -51,7 +51,7 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 			client = TCPSocket::accept(port);
 		acception:
 			// Читаем переданных клиентом данные
-			bufrec.resize(len);
+		//	bufrec.resize(len);
 			bufrec = client.receive();
 			
 			//крутим цикл, пока размер принятного буфера перестанет быть нулем
