@@ -27,19 +27,13 @@ public:
 		archive(_name, _parameters); // serialize things by passing them to the archive
 	}
 
-//	virtual string Run() {};
-	//string Makereport();
+	COMMANDS_API virtual string Run() {};
 protected:
 	string _name;
 	string _parameters;
-	string _error_report = "0";
-	//COMMANDS_API virtual string makeReport();
+	string _error_report = "0";	// 1/0 - success	/.../-code of error
 };
 
-
-//Ќужно придумать логику передачи на сервер и исполнени€ там
-//¬от это г... снизу должно принимать в себ€ объект типа Command после того как он десериализован, и выполн€ть все. 
-//ƒл€ винды верси€ в .cpp лежит, там соответственно тоже надо помен€ть и придумать
 
 
 class RunApplication : public Command {
