@@ -38,7 +38,7 @@ protected:
 
 class RunApplication : public Command {
 public:
-	COMMANDS_API RunApplication(string name, string parameters);
+	COMMANDS_API RunApplication(string name, string parameters) ;
 	COMMANDS_API ~RunApplication() {};
 	COMMANDS_API string Run();
 
@@ -48,7 +48,7 @@ public:
 
 class DelFile : public Command {
 public:
-	COMMANDS_API DelFile(string name, string parameters);
+	COMMANDS_API DelFile(string name, string parameters) {};
 	COMMANDS_API ~DelFile() {};
 	COMMANDS_API string Run();
 
@@ -56,18 +56,19 @@ public:
 	//COMMANDS_API string makeReport() {};
 };
 
-class SendFile : public Command {
+class SendFile : protected Command {
 public:
-	COMMANDS_API SendFile(string name, string parameters);
+	COMMANDS_API SendFile(string name, string parameters) {};
 	COMMANDS_API ~SendFile() {};
-	//COMMANDS_API string Run();
+	COMMANDS_API string Run();
 	//COMMANDS_API string makeReport() {};
 };
 
 class RecieveFile : public Command {
 public:
-	COMMANDS_API RecieveFile(string name, string parameters);
+	COMMANDS_API RecieveFile(string name, string parameters) {};
 	COMMANDS_API ~RecieveFile() {};
+	COMMANDS_API string Run();
 	//COMMANDS_API string Run();
 	//COMMANDS_API string makeReport() {};
 };

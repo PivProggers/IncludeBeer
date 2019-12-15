@@ -6,6 +6,7 @@
 
 #ifndef PCH_H
 #define PCH_H
+#define BUF_SIZE 4096
 
 // add headers that you want to pre-compile here
 #include "framework.h"
@@ -13,5 +14,6 @@
 #include <string>
 #include <stdio.h>
 #include "ShellAPI.h"
+#include <fstream>
 
 #endif //PCH_H
