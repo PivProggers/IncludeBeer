@@ -4,7 +4,7 @@
 #include "cereal\archives\xml.hpp"
 #include "cereal\types\vector.hpp"
 #include "ShellAPI.h"
-
+#include "..\Transport\TCPSocket.h"
 using namespace std;
 
 #ifdef _WIN32
@@ -60,7 +60,7 @@ class SendFile : protected Command {
 public:
 	COMMANDS_API SendFile(string name, string parameters) {};
 	COMMANDS_API ~SendFile() {};
-	COMMANDS_API string Run();
+	COMMANDS_API string Run(TCPSocket::AChar buf);
 	//COMMANDS_API string makeReport() {};
 };
 
@@ -72,3 +72,13 @@ public:
 //	//COMMANDS_API string Run();
 //	//COMMANDS_API string makeReport() {};
 //};
+
+class RecieveFile : public Command {
+public:
+	COMMANDS_API RecieveFile(string name, string parameters) {};
+	COMMANDS_API ~RecieveFile() {};
+	COMMANDS_API string Run(TCPSocket::AChar buf);
+	//COMMANDS_API string Run();
+	//COMMANDS_API string makeReport() {};
+};
+

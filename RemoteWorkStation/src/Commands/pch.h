@@ -9,11 +9,16 @@
 #define BUF_SIZE 4096
 
 // add headers that you want to pre-compile here
-#include "framework.h"
 #include <iostream>
 #include <string>
 #include <stdio.h>
-#include "ShellAPI.h"
 #include <fstream>
+
+#ifdef _WIN32
+	#include "framework.h"
+	#include "ShellAPI.h"
+#else
+	#include <errno.h>
+#endif
 
 #endif //PCH_H

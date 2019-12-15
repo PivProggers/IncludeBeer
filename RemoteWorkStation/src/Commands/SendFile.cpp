@@ -2,7 +2,7 @@
 #include "Command.h"
 using namespace std;
 
-string SendFile::Run()
+string SendFile::Run(TCPSocket::AChar buf = {0})
 {
 #ifdef _WIN32
 	HANDLE h_in = CreateFile((LPCWSTR)_parameters.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
@@ -25,7 +25,20 @@ string SendFile::Run()
 
 	return resultOfReading;
 #else
-
+	std::ofstream out;          // поток для записи
+	out.open(_name); // окрываем файл для записи
+	char*& result;
+	if (out.is_open())
+	{
+		std::copy(buf.begin(), buf.end(), result);
+		out << result;	
+		_error_report = "1";
+	}
+	else
+	{
+		_error_report = "0" + errno;
+		return "0";
+	}
 #endif
-
+	return "1";
 }
