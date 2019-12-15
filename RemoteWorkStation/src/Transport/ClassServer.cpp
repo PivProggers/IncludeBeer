@@ -121,7 +121,7 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 			//вывод параметров
 			cout <<"\tNAME OF COM: " << com._name << " PARAMS: " << com._parameters << endl;
 		}
-		*/
+		*/ 
 	}
 }
 
