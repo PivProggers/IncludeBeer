@@ -121,19 +121,7 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 			//вывод параметров
 			cout <<"\tNAME OF COM: " << com._name << " PARAMS: " << com._parameters << endl;
 		}
-		*/
-
-		//ѕредлагаем закрыть сервер
-		/*printf("\tContinue using server? (Y/N)\t  ");
-		char ch;
-		cin >> ch;
-		if (ch == 'N' || ch == 'n' || ch == 'NO'  || ch == 'no' || ch == 'No') {
-			CloseHandle(hConsole);
-			return server.CloseServer();
-		}
-		else {
-			printf("\t__________________________________\t\n\n");
-		}*/
+		*/ 
 	}
 }
 
