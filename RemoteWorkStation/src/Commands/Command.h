@@ -27,7 +27,7 @@ public:
 		archive(_name, _parameters); // serialize things by passing them to the archive
 	}
 
-	COMMANDS_API virtual string Run() {};
+	COMMANDS_API virtual string Run() { return "0"; };
 protected:
 	string _name;
 	string _parameters;

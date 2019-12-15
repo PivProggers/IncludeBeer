@@ -37,7 +37,7 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 	TCPSocket::AChar bufrec;
 	int len = 1024;
 	while (true) {
-
+	tryout:
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		printf("\tAccepting new connection...");
 
@@ -59,7 +59,10 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 				break;
 
 			// Отправляем клиенту полученную от него же строку
-			client.send(bufrec);
+			if (!client.send(bufrec)) {
+				cout << "Client closed connection" << endl;
+				goto tryout;
+			}
 		}
 
 		//вывод сообщения клиента

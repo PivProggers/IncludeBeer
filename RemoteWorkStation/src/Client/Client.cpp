@@ -85,19 +85,19 @@ int main()
 		case 2:
 			{
 				ShowFillField(" Input name of file, please: ", " Input directory, please: ", command, parameters);
-				SendFile* comObj = new SendFile(command, parameters);
+		//		SendFile* comObj = new SendFile(command, parameters);
 				break;
 			}
 		case 3:
 			{
 				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
-				RecieveFile* comObj = new RecieveFile(command, parameters);
+		//		RecieveFile* comObj = new RecieveFile(command, parameters);
 				break;
 			}
 		case 4:
 			{
 				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
-				DelFile* comObj = new DelFile(command, parameters);
+		//		DelFile* comObj = new DelFile(command, parameters);
 				
 				/*string s = "del"; string com;
 				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", com, parameters);
