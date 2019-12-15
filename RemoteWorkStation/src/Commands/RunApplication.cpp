@@ -7,7 +7,7 @@ RunApplication::RunApplication(string name, string parameters) {
 }
 
 string RunApplication::Run() {
-	if (_name.empty() || _parameters.empty()) {
+	if (_name.empty()) {
 		cout << "Initialize object of the class before" << endl;
 		return "0";
 	}
@@ -23,5 +23,5 @@ string RunApplication::Run() {
 	}
 #endif
 
-	return 0;
+	return "0";
 }

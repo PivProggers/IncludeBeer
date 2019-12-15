@@ -45,7 +45,7 @@ int main()
 	Client client;
 	// Присоединяемся к серверу
 	string name;
-	name = "127.0.0.1"; //"192.168.1.48";
+	name = "127.0.0.1";// "127.0.0.1"; //"192.168.1.48";
 	int port = 65041;
 	
 	for(int attempt = 1; attempt <= countOfConnectionAttempts; attempt++) {
@@ -140,20 +140,14 @@ int main()
 			Sleep(1000);
 			client.SendDataToServer(buf);//отправляем данные
 
-			TCPSocket::AChar recBuf = client.receive();
+			//TCPSocket::AChar recBuf = client.receive();
 
 			buf.clear();//очистка вектора
-			delete &comObj;
+			//delete &comObj;
 			system("pause"); // задерживаем выполнение, чтобы пользователь мог увидеть результат выполнения выбранного пункта
 
 			system("cls");
 		}
-		/*else
-		{
-
-			client.CloseClient();
-			return 0;
-		}*/
 	} while (true);
 
 	return 0;
