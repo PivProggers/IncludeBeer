@@ -188,10 +188,12 @@ bool TCPSocket::send(const TCPSocket::AChar & inbuf)
 {
 	if (!this->connected)
 		throw std::exception("Must be connected first");
-	printf("\tCLIENT is sending data...\t\n");
-	printf("\tData has been sent...\t\n");
-
-	return inbuf.size() == ::send(s, &inbuf[0], inbuf.size(), 0);//отправляем данные
+	/*printf("\tCLIENT is sending data...\t\n");
+	printf("\tData has been sent...\t\n");*/
+	if (inbuf.size() != 0) {
+		return inbuf.size() == ::send(s, &inbuf[0], inbuf.size(), 0);//отправляем данные
+	}
+	else return false;
 }
 
 TCPSocket::AChar TCPSocket::receive()//принимаем данные
