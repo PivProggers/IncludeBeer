@@ -58,7 +58,7 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			//крутим цикл, пока размер принятного буфера перестанет быть нулем
 			if (bufrec.size() != 0)
 				break;
-
+			
 			// Отправляем клиенту полученную от него же строку
 			if (!client.send(bufrec)) {
 				SetConsoleTextAttribute(hConsole, 12);
@@ -118,9 +118,11 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			сейчас этот метод работает как и предыдущий на прием!*/
 
 			FileHandler command(com.GetName(), com.GetParameters());
-			string a;
-			a.assign(it + strlen(comname), bufrec.end());
-			command.RecieveFile(a, com.GetParameters().c_str());
+			string a = command.SendFile(com.GetName().c_str());
+			TCPSocket::AChar sendbuf;
+			sendbuf.assign(a.begin(), a.end());
+			client.send(sendbuf);
+			sendbuf.clear();
 			a.clear();
 		}
 		else if(comname == "com4") {

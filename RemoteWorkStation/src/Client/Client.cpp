@@ -124,7 +124,7 @@ int main()
 			}
 		case 3:
 			{
-				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
+				ShowFillField(" Input full path to file on server, please: ", " Input full path to save, please: ", command, parameters);
 				FileHandler comObj(command, parameters);
 				
 				stringstream ss;
@@ -134,15 +134,32 @@ int main()
 					//записываем данные в узел Command
 					archive(cereal::make_nvp("Command", comObj));
 				}
-				string a = comObj.SendFile(command.c_str());
+
 				//записываем
-				string str = ss.str() + "com3" + a;// + "[::]" + a;
+				string str = ss.str() + "com3";
 				TCPSocket::AChar buf;
 				buf.assign(str.begin(), str.end());//заполняем буфер для передачи
 				Sleep(1000);
 
 				client.SendDataToServer(buf);//отправляем данные
 				buf.clear();//очистка вектора
+				TCPSocket::AChar recievebuf;
+				while (true)
+				{
+					// Читаем переданных клиентом данные
+					recievebuf = client.receive();
+
+					//крутим цикл, пока размер принятного буфера перестанет быть нулем
+					if (recievebuf.size() != 0)
+						break;
+				}
+
+				string filestr;
+				filestr.assign(recievebuf.begin(), recievebuf.end());
+				comObj.RecieveFile(filestr.c_str(), parameters.c_str());
+				filestr.clear();
+				recievebuf.clear();//очистка вектора
+
 				break;
 			}
 		case 4:
