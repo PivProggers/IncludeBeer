@@ -29,7 +29,7 @@ int main()
 		server.InitServer(name, port);
 		Sleep(1000);
 	
-		if (!server.ReceiveDataFromClient(port, server, client)) {
+		if (!server.WorkWithClient(port, server, client)) {
 			break;
 		}
 

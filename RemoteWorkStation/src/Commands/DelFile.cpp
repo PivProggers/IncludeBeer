@@ -6,8 +6,7 @@
 
 string DelFile::Run()
 {
-		_error_report = (remove(_parameters.c_str()) != 0)
+	return	_error_report = (remove(_parameters.c_str()) != 0)
 		? "0" + GetLastError()
-		: "1";
-	return "0";
+		: "successfully deleted";
 }
