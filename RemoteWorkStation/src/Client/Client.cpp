@@ -45,7 +45,8 @@ int main()
 	Client client;
 	// Присоединяемся к серверу
 	string name;
-	name = "127.0.0.1"; //"192.168.1.48";
+//	name = "192.168.1.34"; //"192.168.1.48";
+	name = "127.0.0.1";//"192.168.1.36";// "127.0.0.1"; //"192.168.1.48";
 	int port = 65041;
 	
 	for(int attempt = 1; attempt <= countOfConnectionAttempts; attempt++) {
@@ -80,34 +81,107 @@ int main()
 			{
 				ShowFillField(" Input name of the application, please: ", " Input parameters, please: ", command, parameters);
 				RunApplication comObj(command, parameters);
-				//не реализовано
+				stringstream ss;
+				//serialize block
+				{
+					cereal::XMLOutputArchive archive(ss);
+					//записываем данные в узел Command
+					archive(cereal::make_nvp("Command", comObj));
+				}
+
+				//записываем
+				string str = ss.str() + "com1";
+				TCPSocket::AChar buf;
+				buf.assign(str.begin(), str.end());//заполняем буфер для передачи
+				Sleep(1000);
+
+				client.SendDataToServer(buf);//отправляем данные
+				buf.clear();//очистка вектора
 				break;
 			}
 		case 2:
 			{
-				ShowFillField(" Input name of file, please: ", " Input directory, please: ", command, parameters);
-				//SendFile comObj(command, parameters);
-				//не реализовано
+				ShowFillField(" Input full path to file to upload, please: ", " Input full path to save, please: ", command, parameters);
+				FileHandler comObj(command, parameters);
+				
+				stringstream ss;
+				//serialize block
+				{
+					cereal::XMLOutputArchive archive(ss);
+					//записываем данные в узел Command
+					archive(cereal::make_nvp("Command", comObj));
+				}
+				string a = comObj.SendFile(command.c_str());
+				//записываем
+				string str = ss.str()+"com2"+a;// + "[::]" + a;
+				TCPSocket::AChar buf;
+				buf.assign(str.begin(), str.end());//заполняем буфер для передачи
+				Sleep(1000);
+
+				client.SendDataToServer(buf);//отправляем данные
+				buf.clear();//очистка вектора
 				break;
 			}
 		case 3:
 			{
-				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
-				//RecieveFile comObj(command, parameters);
-				//не реализовано
+				ShowFillField(" Input full path to file on server, please: ", " Input full path to save, please: ", command, parameters);
+				FileHandler comObj(command, parameters);
+				
+				stringstream ss;
+				//serialize block
+				{
+					cereal::XMLOutputArchive archive(ss);
+					//записываем данные в узел Command
+					archive(cereal::make_nvp("Command", comObj));
+				}
+
+				//записываем
+				string str = ss.str() + "com3";
+				TCPSocket::AChar buf;
+				buf.assign(str.begin(), str.end());//заполняем буфер для передачи
+				Sleep(1000);
+
+				client.SendDataToServer(buf);//отправляем данные
+				buf.clear();//очистка вектора
+				TCPSocket::AChar recievebuf;
+				while (true)
+				{
+					// Читаем переданных клиентом данные
+					recievebuf = client.receive();
+
+					//крутим цикл, пока размер принятного буфера перестанет быть нулем
+					if (recievebuf.size() != 0)
+						break;
+				}
+
+				string filestr;
+				filestr.assign(recievebuf.begin(), recievebuf.end());
+				comObj.RecieveFile(filestr.c_str(), parameters.c_str());
+				filestr.clear();
+				recievebuf.clear();//очистка вектора
+
 				break;
 			}
 		case 4:
 			{
-				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", command, parameters);
-				//DelFile comObj(command, parameters);
-				
-				/*string s = "del"; string com;
-				ShowFillField(" Input  name of file, please: ", " Input directory, please: ", com, parameters);
-				command = s +" "+ parameters + "\\" + com;
-				parameters = "";
-				cout << command << endl;
-				cout << endl;*/
+				ShowFillField("Input filename: ", " Input full path to file, please: ", command, parameters);
+				DelFile comObj(command, parameters);
+				stringstream ss;
+				//serialize block
+				{
+					cereal::XMLOutputArchive archive(ss);
+					//записываем данные в узел Command
+					archive(cereal::make_nvp("Command", comObj));
+				}
+
+				//записываем
+				string str = ss.str() + "com4";
+				TCPSocket::AChar buf;
+				buf.assign(str.begin(), str.end());//заполняем буфер для передачи
+				Sleep(1000);
+
+				client.SendDataToServer(buf);//отправляем данные
+				buf.clear();//очистка вектор
 				break;
 			}
 		default: //при закрытии клиента сразу после вызова через нажатие 5 вылетает исключение
@@ -120,40 +194,17 @@ int main()
 		if (variant !=5)
 		{ 
 			SetConsoleTextAttribute(hConsole, 12);
-
-			//cсоздаем объект класса из полученных данных и открываем поток на запись файла
-			Command comObj(command, parameters);
-			//std::ofstream file("out.xml");
-			stringstream ss;
-
-			//serialize block
-			{
-				cereal::XMLOutputArchive archive(ss);
-				//записываем данные в узел Command
-				archive(cereal::make_nvp("Command", comObj));
-			}
-			//записываем
-			string str = ss.str();
-			//file.flush();
-
-			TCPSocket::AChar buf;
-			//std::string str("Executing command");
-			buf.assign(str.begin(), str.end());//заполняем буфер для передачи
-
-			Sleep(1000);
-			client.SendDataToServer(buf);//отправляем данные
-				 
-			buf.clear();//очистка вектора
-		//	delete comObj;
 			system("pause"); // задерживаем выполнение, чтобы пользователь мог увидеть результат выполнения выбранного пункта
 			system("cls");
 		}
-		/*else
-		{
-
-			client.CloseClient();
-			return 0;
-		}*/
 	} while (true);
+
+	return 0;
 }
 
+//void Ofcskaya(int functia) //cashback na vse i na eto in na eto i na eto i na to
+//{
+//	//		1/0			    2/1/0				1/0			  4/3/2/1			/object of the class/	/size of file/		?/ count of parts of the file/		/file/
+//	//	 whosends	containtsfile/authori	  success		numberOfCommand										
+//	TCPSocket::AChar buf = {};
+//}

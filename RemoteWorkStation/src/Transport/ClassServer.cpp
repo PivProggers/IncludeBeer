@@ -11,7 +11,10 @@
 #include <vector>
 #include <string>
 #include <iterator>
+#include <algorithm>
 using namespace std;
+
+const char* NameOfCommands[] = { "com1", "com2", "com3", "com4" };
 
 Server::Server(void) {
 	TCPSocket server;
@@ -32,47 +35,60 @@ bool Server::InitServer(const std::string & addr, int port) {
 }
 
 
-int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
+int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 
 	TCPSocket::AChar bufrec;
-	int len = 1024;
 	while (true) {
-
+	tryout:
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		printf("\tAccepting new connection...");
+		cout<< "\tAccepting new connection...";
 
 		SetConsoleTextAttribute(hConsole, 106);
-		printf("\!_OPEN CLIENT_!\t\n");
+		cout << "\!_OPEN CLIENT_!\t" << endl;
 		SetConsoleTextAttribute(hConsole, 2);
 
 		while (true)
 		{
 			//переменная для управления выводом сервера
 			client = TCPSocket::accept(port);
-
+		acception:
 			// Читаем переданных клиентом данные
-			bufrec.resize(len);
 			bufrec = client.receive();
 			
 			//крутим цикл, пока размер принятного буфера перестанет быть нулем
 			if (bufrec.size() != 0)
 				break;
-
+			
 			// Отправляем клиенту полученную от него же строку
-			client.send(bufrec);
+			if (!client.send(bufrec)) {
+				SetConsoleTextAttribute(hConsole, 12);
+				cout << "Client closed connection" << endl;
+				SetConsoleTextAttribute(hConsole, 2);
+				goto tryout;
+			}
 		}
 
 		//вывод сообщения клиента
 		SetConsoleTextAttribute(hConsole, 12);
-		printf("\tCLIENT MESSAGE:\t");
+		cout << "\tCLIENT MESSAGE:\t" << endl;
 
 		//_________вывод содержимого буфера__________//
-		std::stringstream ss(std::string(bufrec.begin(), bufrec.end()));
+		auto it = bufrec.begin();
+		const char* comname;
 
+		//поиск команды
+		for (auto& cm : NameOfCommands) {
+			 it = std::search(bufrec.begin(), bufrec.end(), cm, cm + strlen(cm));
+			 if (it != bufrec.end()) {
+				 comname = cm;
+				 break;
+			 }
+		}
+	
 		//вывод содержимого xml
 		//cсоздаем объект класса и открываем поток на чтение
 		Command com;
-
+		std::stringstream ss(std::string(bufrec.begin(), it));
 		//deserialize block
 		{
 			cereal::XMLInputArchive ar(ss);
@@ -80,59 +96,53 @@ int Server::ReceiveDataFromClient(int port, Server& server, TCPSocket& client) {
 			ar(cereal::make_nvp("Command", com));
 			//вывод параметров
 			SetConsoleTextAttribute(hConsole, 11);
-			cout << "NAME OF COM: " << com.GetName() << " PARAMS: " << com.GetParameters() << endl;
+			cout << "NAME: " << com.GetName() << " PARAMS: " << com.GetParameters();
 		}
+		cout << " IDofCom: "<< comname << endl;
 
-		RunApplication command(com.GetName(), com.GetParameters());
+		if (comname == "com1") {
+			RunApplication command(com.GetName(), com.GetParameters());
+			command.Run();
+		}
+		else if (comname == "com2") {
+			FileHandler command(com.GetName(), com.GetParameters());
+			string a,b;
+			a.assign(it + strlen(comname), bufrec.end());
+			b = command.RecieveFile(a.c_str(), com.GetParameters().c_str());
+			cout << b.c_str() << endl;
+			b.clear();
+			a.clear();
+		}
+		else if (comname == "com3") {
+			/*Recieve НЕ РАБОТАЕТ!!!! подумайте, как отправлять данные НА клиент
+			сейчас этот метод работает как и предыдущий на прием!*/
 
-		// Display
-		/*std::cout << ss.str() << std::endl;
-		for (int i = 0; i < bufrec.size(); ++i)
-			cout << bufrec[i];*/
-
-		printf("\n");
+			FileHandler command(com.GetName(), com.GetParameters());
+			string a = command.SendFile(com.GetName().c_str());
+			TCPSocket::AChar sendbuf;
+			sendbuf.assign(a.begin(), a.end());
+			client.send(sendbuf);
+			sendbuf.clear();
+			a.clear();
+		}
+		else if(comname == "com4") {
+			/*Delete*/
+			DelFile command(com.GetName(), com.GetParameters());
+			string a = command.Run();
+			cout << a << endl;
+			a.clear();
+		}
 
 		//очистка буфера
 		bufrec.clear();
 
 		SetConsoleTextAttribute(hConsole, 2);
-
-
-
-	/*		//вывод содержимого xml
-		//cсоздаем объект класса и открываем поток на чтение файла
-		Command com;
-		ifstream file("out.xml");
-			if (!file.is_open()) {
-				cout << "Oops!" << endl;
-				return -1;
-			}
-		//deserialize block
-		{
-			cereal::XMLInputArchive ar(file);
-			//чтение узла Command
-			ar(cereal::make_nvp("Command", com));
-			//вывод параметров
-			cout <<"\tNAME OF COM: " << com._name << " PARAMS: " << com._parameters << endl;
-		}
-		*/
-
-		//Предлагаем закрыть сервер
-		/*printf("\tContinue using server? (Y/N)\t  ");
-		char ch;
-		cin >> ch;
-		if (ch == 'N' || ch == 'n' || ch == 'NO'  || ch == 'no' || ch == 'No') {
-			CloseHandle(hConsole);
-			return server.CloseServer();
-		}
-		else {
-			printf("\t__________________________________\t\n\n");
-		}*/
+		if (this->connected) goto tryout;
+		else goto acception;
 	}
 }
 
 int Server::CloseServer() {
-
-	printf("\tShutdown SERVER...\t\n");
+	cout << "\tShutdown SERVER...\t" << endl;
 	return 0;
 }

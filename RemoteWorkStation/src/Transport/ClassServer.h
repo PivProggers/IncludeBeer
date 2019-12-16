@@ -27,9 +27,10 @@ public:
 	TRANSPORT_API Server(const Server& copy);
 
 	TRANSPORT_API bool InitServer(const std::string & addr, int port);
-	TRANSPORT_API int ReceiveDataFromClient(int port, Server& server, TCPSocket& client);
+	TRANSPORT_API int WorkWithClient(int port, Server& server, TCPSocket& client);
 	TRANSPORT_API int CloseServer();
 };
+
 
 
 

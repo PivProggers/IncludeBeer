@@ -4,7 +4,7 @@
 #include "cereal\archives\xml.hpp"
 #include "cereal\types\vector.hpp"
 #include "ShellAPI.h"
-
+#include "..\Transport\TCPSocket.h"
 using namespace std;
 
 #ifdef _WIN32
@@ -27,24 +27,18 @@ public:
 		archive(_name, _parameters); // serialize things by passing them to the archive
 	}
 
-//	virtual string Run() {};
-	//string Makereport();
+	COMMANDS_API virtual string Run() { return "0"; };
 protected:
 	string _name;
 	string _parameters;
-	string _error_report = "0";
-	//COMMANDS_API virtual string makeReport();
+	string _error_report = "0";	// 1/0 - success	/.../-code of error
 };
 
-
-//Ќужно придумать логику передачи на сервер и исполнени€ там
-//¬от это г... снизу должно принимать в себ€ объект типа Command после того как он десериализован, и выполн€ть все. 
-//ƒл€ винды верси€ в .cpp лежит, там соответственно тоже надо помен€ть и придумать
 
 
 class RunApplication : public Command {
 public:
-	COMMANDS_API RunApplication(string name, string parameters);
+	COMMANDS_API RunApplication(string name, string parameters) ;
 	COMMANDS_API ~RunApplication() {};
 	COMMANDS_API string Run();
 
@@ -54,7 +48,8 @@ public:
 
 class DelFile : public Command {
 public:
-	COMMANDS_API DelFile(string name, string parameters);
+	COMMANDS_API DelFile() {};
+	COMMANDS_API DelFile(string name, string parameters) { _name = name; _parameters = parameters; };
 	COMMANDS_API ~DelFile() {};
 	COMMANDS_API string Run();
 
@@ -62,18 +57,12 @@ public:
 	//COMMANDS_API string makeReport() {};
 };
 
-class SendFile : public Command {
+class FileHandler : public Command {
 public:
-	COMMANDS_API SendFile(string name, string parameters);
-	COMMANDS_API ~SendFile() {};
-	//COMMANDS_API string Run();
-	//COMMANDS_API string makeReport() {};
-};
+	COMMANDS_API FileHandler() {};
+	COMMANDS_API FileHandler(string name, string parameters) { _name = name; _parameters = parameters; };
+	COMMANDS_API ~FileHandler() {};
+	COMMANDS_API string SendFile(const char* name);
+	COMMANDS_API string RecieveFile(string fileReadBuf, const char* name);
 
-class RecieveFile : public Command {
-public:
-	COMMANDS_API RecieveFile(string name, string parameters);
-	COMMANDS_API ~RecieveFile() {};
-	//COMMANDS_API string Run();
-	//COMMANDS_API string makeReport() {};
 };

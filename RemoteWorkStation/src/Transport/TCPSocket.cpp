@@ -88,7 +88,8 @@ bool TCPSocket::bind(int port, const sockaddr_in * name)
 		throw std::exception("Already used");
 
 	if (name) {//если была передана структура sockaddr_in
-		printf("\tSERVER has been started...\t\n");
+		cout << "\tSERVER has been started...\t" << endl;
+
 		return bound = (0 == ::bind(s, (sockaddr *)name, sizeof(sockaddr_in)));//то биндим на основании её данных, иначе
 	}
 
@@ -98,7 +99,8 @@ bool TCPSocket::bind(int port, const sockaddr_in * name)
 	s_in.sin_addr.S_un.S_addr = INADDR_ANY;
 	s_in.sin_port = ::htons(port);//кроме порта
 
-	printf("\tSERVER has been started...\t\n");
+	cout << "\tSERVER has been started...\t" << endl;
+
 	return bound = (0 == ::bind(s, (sockaddr *)&s_in, sizeof(sockaddr_in)));//и биндим на эту структуру
 }
 
@@ -123,7 +125,7 @@ bool TCPSocket::listen(int port, int backlog)
 	if (!bound && !this->bind(port))//если сокет не сбинден, нужно сбиндить
 		throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
 
-	printf("\tSERVER is waiting for connection...\t\n");
+	cout << "\tSERVER is waiting for connection...\t" << endl;
 
 
 	return listening = (0 == ::listen(s, backlog));//переводим сокет в режим прослушки
@@ -158,7 +160,7 @@ TCPSocket TCPSocket::accept(int port, sockaddr * addr, int * addrlen)
 
 bool TCPSocket::connect(const sockaddr_in & name)
 {
-	printf("\tCLIENT is trying to connect...\t\n");
+	cout << "\tCLIENT is trying to connect...\t" << endl;
 	if (this->bound || this->listening || this->connected)//занят - исключение
 	{
 		throw std::exception("Already in use");
@@ -188,10 +190,10 @@ bool TCPSocket::send(const TCPSocket::AChar & inbuf)
 {
 	if (!this->connected)
 		throw std::exception("Must be connected first");
-	printf("\tCLIENT is sending data...\t\n");
-	printf("\tData has been sent...\t\n");
-
-	return inbuf.size() == ::send(s, &inbuf[0], inbuf.size(), 0);//отправляем данные
+	if (inbuf.size() != 0) {
+		return inbuf.size() == ::send(s, &inbuf[0], inbuf.size(), 0);//отправляем данные
+	}
+	else return false;
 }
 
 TCPSocket::AChar TCPSocket::receive()//принимаем данные
@@ -200,8 +202,7 @@ TCPSocket::AChar TCPSocket::receive()//принимаем данные
 	AChar::size_type size = 1;//начальный размер массива - 1
 	char buf[10];
 
-	printf("\tReceiving data is started...\t\n");
-
+	cout << "\tReceiving data is started...\t" << endl;
 	if (!this->connected)
 		throw std::exception("Must be connected first");
 
@@ -229,7 +230,7 @@ TCPSocket::AChar TCPSocket::receive()//принимаем данные
 	rval.resize(--size);//корректируем размер буфера
 	::recv(s, &rval[0], size, 0);//читаем данные
 
-	printf("\tAll data received successfully\t\n");
+	cout << "\tAll data received successfully\t" << endl;
 
 	return rval;//возвращаем буфер
 }
