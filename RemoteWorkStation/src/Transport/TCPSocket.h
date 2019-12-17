@@ -33,6 +33,7 @@ protected:
 	int * iLinks;
 	SOCKET s;
 public:
+	TRANSPORT_API bool IsConnected() { return connected; };
 	TRANSPORT_API TCPSocket(void);
 	TRANSPORT_API TCPSocket(const TCPSocket & copy);
 	TRANSPORT_API ~TCPSocket(void);

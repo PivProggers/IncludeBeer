@@ -39,9 +39,16 @@ string FileHandler::SendFile(const char* name)
             buf.append(buffer, CountOfRead);
             delete[] buffer;
         }
-
+		fclose(fin);
+		_error_report = "Succesfully read file";
         return buf;
     }
+	else
+	{
+		_error_report = "Failed with reading the file";
+		buf.clear();
+		return buf;
+	}
 }
 
 string FileHandler::RecieveFile(string fileReadBuf, const char* name)
@@ -71,9 +78,14 @@ string FileHandler::RecieveFile(string fileReadBuf, const char* name)
             ++countOfCycles;
         }
         fclose(fout);
-        result = "success";
+        result = "0";
+		_error_report = "Succesfully writting file";
+
     }
-    else
-        result = "failed";
+	else
+	{
+		result = "-1";
+		_error_report = "Failed with writting the file";
+	}
     return result;
 }

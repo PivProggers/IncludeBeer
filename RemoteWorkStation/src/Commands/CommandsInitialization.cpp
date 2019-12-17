@@ -12,6 +12,6 @@ Command::Command(string name, string parameters){
 
 }
 
-//string Command::Makereport() {
-//	    
-//}
+string Command::MakeReport() {
+	return _error_report + "\n";
+}

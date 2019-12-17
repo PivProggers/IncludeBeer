@@ -19,7 +19,7 @@ public:
 	COMMANDS_API string GetName() { return this->_name; }
 	COMMANDS_API string GetParameters() { return this->_parameters; }
 	COMMANDS_API void SetName(string name) { this->_name = name; }
-	COMMANDS_API void GetParameters(string parameters) { this->_parameters = parameters; }
+	COMMANDS_API void SetParameters(string parameters) { this->_parameters = parameters; }
 
 	template<class Archive>
 	void serialize(Archive & archive)
@@ -28,6 +28,7 @@ public:
 	}
 
 	COMMANDS_API virtual string Run() { return "0"; };
+	COMMANDS_API string MakeReport();
 protected:
 	string _name;
 	string _parameters;

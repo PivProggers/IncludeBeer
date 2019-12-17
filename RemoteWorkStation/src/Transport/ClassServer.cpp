@@ -46,7 +46,6 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 		SetConsoleTextAttribute(hConsole, 106);
 		cout << "\!_OPEN CLIENT_!\t" << endl;
 		SetConsoleTextAttribute(hConsole, 2);
-
 		while (true)
 		{
 			//переменная для управления выводом сервера
@@ -68,6 +67,7 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			}
 		}
 
+	
 		//вывод сообщения клиента
 		SetConsoleTextAttribute(hConsole, 12);
 		cout << "\tCLIENT MESSAGE:\t" << endl;
@@ -103,6 +103,18 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 		if (comname == "com1") {
 			RunApplication command(com.GetName(), com.GetParameters());
 			command.Run();
+
+			//отчет
+			string report = command.MakeReport();
+			TCPSocket::AChar sendbuf;
+
+			sendbuf.assign(report.begin(), report.end());
+			if (IsConnected())
+				client.send(sendbuf);
+
+			sendbuf.clear();
+			cout << report;
+			report.clear();
 		}
 		else if (comname == "com2") {
 			FileHandler command(com.GetName(), com.GetParameters());
@@ -112,11 +124,19 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			cout << b.c_str() << endl;
 			b.clear();
 			a.clear();
-		}
-		else if (comname == "com3") {
-			/*Recieve НЕ РАБОТАЕТ!!!! подумайте, как отправлять данные НА клиент
-			сейчас этот метод работает как и предыдущий на прием!*/
 
+			//отчет
+			string report = command.MakeReport();
+			TCPSocket::AChar sendbuf;
+			sendbuf.assign(report.begin(), report.end());
+			client.send(sendbuf);
+			sendbuf.clear();
+			report.clear();
+			cout << report;
+
+		}
+		else if (comname == "com3") 
+		{
 			FileHandler command(com.GetName(), com.GetParameters());
 			string a = command.SendFile(com.GetName().c_str());
 			TCPSocket::AChar sendbuf;
@@ -124,6 +144,10 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			client.send(sendbuf);
 			sendbuf.clear();
 			a.clear();
+
+			//отчет
+			string report = command.MakeReport();
+			cout << report;
 		}
 		else if(comname == "com4") {
 			/*Delete*/
@@ -131,6 +155,15 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			string a = command.Run();
 			cout << a << endl;
 			a.clear();
+
+			//отчет
+			string report = command.MakeReport();
+			TCPSocket::AChar sendbuf;
+			sendbuf.assign(report.begin(), report.end());
+			client.send(sendbuf);
+			sendbuf.clear();
+			report.clear();
+			cout << report;
 		}
 
 		//очистка буфера
