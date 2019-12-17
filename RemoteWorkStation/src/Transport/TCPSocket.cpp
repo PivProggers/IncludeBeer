@@ -4,6 +4,7 @@
 #include "TCPSocket.h"
 #include <exception>
 #include <iostream>
+#include <Windows.h>
 using namespace std;
 
 int TCPSocket::init = 0;
@@ -166,7 +167,18 @@ bool TCPSocket::connect(const sockaddr_in & name)
 		throw std::exception("Already in use");
 	}
 	connected = (0 == ::connect(s, (sockaddr*)&name, sizeof(name)));//подключаемся со структурой name
-	printf(connected ? "\tCLIENT is connected: TRUE...\t\n" : "\tCLIENT is connected: FALSE...\t\n");
+	
+	if (connected) {
+		
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+		cout << "\tCLIENT is connected: TRUE...\t" << endl;
+	}
+	else {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+		cout << "\tCLIENT is connected: FALSE...\t" << endl;
+	}
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+
 	return connected;
 
 }
@@ -230,7 +242,9 @@ TCPSocket::AChar TCPSocket::receive()//принимаем данные
 	rval.resize(--size);//корректируем размер буфера
 	::recv(s, &rval[0], size, 0);//читаем данные
 
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
 	cout << "\tAll data received successfully\t" << endl;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
 	return rval;//возвращаем буфер
 }

@@ -42,13 +42,16 @@ int get_variant(int count) {
 
 int main() 
 {
-	system("COLOR 0C");
+	cout << "Input server IP-address: ";
+	string name;
+	getline(cin, name);
 
 	Client client;
 	// Присоединяемся к серверу
-	string name;
+	//string name;
+	//string name = "192.168.1.74";
 //	name = "192.168.1.34"; //"192.168.1.48";
-	name = "127.0.0.1";//"192.168.1.36";// "127.0.0.1"; //"192.168.1.48";
+	//name = "127.0.0.1";//"192.168.1.36";// "127.0.0.1"; //"192.168.1.48";
 	int port = 65041;
 	
 	for(int attempt = 1; attempt <= countOfConnectionAttempts; attempt++) {
@@ -66,19 +69,20 @@ int main()
 	//ввод содержимого в xml
 	string command, parameters;
 
-
 	//После вывода на экране предложения, ввести через enter например help dir -- это выведет справку о команде dir в shell'e
 	int variant;
 	//Command commandGranny;
 	do {
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(hConsole, 10);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
 
 		print_menu(); // выводим меню на экран
 		
+		//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
+
 		variant = get_variant(5); // получаем номер выбранного пункта меню
 
 		switch (variant) {
+			
 		case 1 :
 			{
 				ShowFillField(" Input name of the application, please: ", " Input parameters, please: ", command, parameters);
@@ -97,8 +101,7 @@ int main()
 				buf.assign(str.begin(), str.end());//заполняем буфер для передачи
 				Sleep(1000);
 
-			//	if (client.IsConnected())
-					client.SendDataToServer(buf);//отправляем данные
+				client.SendDataToServer(buf);//отправляем данные
 				buf.clear();//очистка вектора
 				break;
 			}
@@ -115,9 +118,8 @@ int main()
 					archive(cereal::make_nvp("Command", comObj));
 				}
 				string a = comObj.SendFile(command.c_str());
-
 				//записываем
-				string str = ss.str()+"com2"+a;// + "[::]" + a;
+				string str = ss.str() + "com2" + a;// + "[::]" + a;
 				TCPSocket::AChar buf;
 				buf.assign(str.begin(), str.end());//заполняем буфер для передачи
 				Sleep(1000);
@@ -160,7 +162,7 @@ int main()
 
 				string filestr;
 				filestr.assign(recievebuf.begin(), recievebuf.end());
-				comObj.RecieveFile(filestr.c_str(), parameters.c_str());
+				comObj.RecieveFile(filestr, parameters.c_str());
 				filestr.clear();
 				recievebuf.clear();//очистка вектора
 
@@ -197,9 +199,9 @@ int main()
 		}
 		if (variant !=5)
 		{ 
-			SetConsoleTextAttribute(hConsole, 12);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
-			////////////////////////////////отчет о работе///////////////////////////////////////////////////////////////
+			////////////////////////////////отчет о работе////////////////////////////////
 			TCPSocket::AChar bufReport;
 			while (true)
 			{
@@ -214,9 +216,9 @@ int main()
 				}
 				// Отправляем клиенту полученную от него же строку
 				if (!client.send(bufReport)) {
-					SetConsoleTextAttribute(hConsole, 12);
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
 					cout << "Server closed connection" << endl;
-					SetConsoleTextAttribute(hConsole, 2);
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
 					break;
 				}
 			}
@@ -226,27 +228,23 @@ int main()
 			system("cls");
 		}
 	} while (true);
-
+	
 	return 0;
 }
 
-//void Ofcskaya(int functia) //cashback na vse i na eto in na eto i na eto i na to
-//{
-//	//		1/0			    2/1/0				1/0			  4/3/2/1			/object of the class/	/size of file/		?/ count of parts of the file/		/file/
-//	//	 whosends	containtsfile/authori	  success		numberOfCommand										
-//	TCPSocket::AChar buf = {};
-//}
-
-
-//string ClientTest(int variant, string Command, string parameters)
+//string ClientTesting(int variant, string command, string parameters)
 //{
 //	Client client;
 //	string name;
 //	name = "127.0.0.1";
 //	int port = 65041;
-//
+//	
 //	for (int attempt = 1; attempt <= countOfConnectionAttempts; attempt++) {
 //		if (client.InitClient(name, port)) {
+//			if (variant == 6) {
+//				client.CloseClient();
+//				return "connected";
+//			}
 //			break;
 //		}
 //		if (attempt == 5) {
@@ -254,7 +252,7 @@ int main()
 //			return "Failed with the connection attempts";
 //		}
 //	}
-//	string command, parameters;
+//	
 //
 //	do {
 //		switch (variant) {

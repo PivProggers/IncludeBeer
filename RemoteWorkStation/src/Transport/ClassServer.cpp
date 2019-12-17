@@ -107,10 +107,8 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			//מעקוע
 			string report = command.MakeReport();
 			TCPSocket::AChar sendbuf;
-
 			sendbuf.assign(report.begin(), report.end());
-			if (IsConnected())
-				client.send(sendbuf);
+			client.send(sendbuf);
 
 			sendbuf.clear();
 			cout << report;
@@ -120,7 +118,7 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			FileHandler command(com.GetName(), com.GetParameters());
 			string a,b;
 			a.assign(it + strlen(comname), bufrec.end());
-			b = command.RecieveFile(a.c_str(), com.GetParameters().c_str());
+			b = command.RecieveFile(a, com.GetParameters().c_str());
 			cout << b.c_str() << endl;
 			b.clear();
 			a.clear();
@@ -131,8 +129,9 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			sendbuf.assign(report.begin(), report.end());
 			client.send(sendbuf);
 			sendbuf.clear();
-			report.clear();
+			
 			cout << report;
+			report.clear();
 
 		}
 		else if (comname == "com3") 
@@ -147,7 +146,12 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 
 			//מעקוע
 			string report = command.MakeReport();
+			TCPSocket::AChar reportbuf;
+			reportbuf.assign(report.begin(), report.end());
+			client.send(reportbuf);
+			reportbuf.clear();
 			cout << report;
+			report.clear();
 		}
 		else if(comname == "com4") {
 			/*Delete*/

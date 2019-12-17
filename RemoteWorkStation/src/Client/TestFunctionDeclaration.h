@@ -1,3 +1,4 @@
 #pragma once
-
-std::string ClientTest(int ComNum, string Command, string parameters);
+#include <string>
+using namespace std;
+//string ClientTesting(int ComNum, char Command, char parameters);

@@ -16,7 +16,7 @@ string FileHandler::SendFile(const char* name)
         fseek(fin, 0, SEEK_END);
         // Get size of the file
         unsigned int m_file_size = ftell(fin);
-
+        cout << m_file_size << endl;
         // Go to start
         rewind(fin);
 
@@ -37,8 +37,10 @@ string FileHandler::SendFile(const char* name)
             i += CountOfRead;
             // Write "BLOCK_SIZE" bytes
             buf.append(buffer, CountOfRead);
-            delete[] buffer;
+         
+            delete buffer;
         }
+
 		fclose(fin);
 		_error_report = "Succesfully read file";
         return buf;
