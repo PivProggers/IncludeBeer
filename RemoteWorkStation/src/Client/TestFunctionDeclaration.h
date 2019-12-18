@@ -1,4 +1,6 @@
 #pragma once
 #include <string>
 using namespace std;
-//string ClientTesting(int ComNum, char Command, char parameters);
+#ifdef TEST_
+string ClientTesting(int variant, string command, string parameters, int port, const char* nameIp);
+#endif

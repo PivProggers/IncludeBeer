@@ -8,7 +8,9 @@
 using namespace std;
 
 #ifdef _WIN32
-#define OS_WIN
+	#define OS_WIN
+#else
+	#undef COMMANDS_API
 #endif
 
 class Command {
@@ -42,9 +44,6 @@ public:
 	COMMANDS_API RunApplication(string name, string parameters) ;
 	COMMANDS_API ~RunApplication() {};
 	COMMANDS_API string Run();
-
-
-	//COMMANDS_API string makeReport() {};
 };
 
 class DelFile : public Command {
@@ -53,9 +52,6 @@ public:
 	COMMANDS_API DelFile(string name, string parameters) { _name = name; _parameters = parameters; };
 	COMMANDS_API ~DelFile() {};
 	COMMANDS_API string Run();
-
-
-	//COMMANDS_API string makeReport() {};
 };
 
 class FileHandler : public Command {
@@ -65,5 +61,4 @@ public:
 	COMMANDS_API ~FileHandler() {};
 	COMMANDS_API string SendFile(const char* name);
 	COMMANDS_API string RecieveFile(string fileReadBuf, const char* name);
-
 };

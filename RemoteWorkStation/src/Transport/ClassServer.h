@@ -13,11 +13,11 @@
 #endif
 
 #ifndef OS_WIN
-#include <netinet/in.h>
+	#include <netinet/in.h>
 #else
-#include <Winsock2.h>
-#include <vector>
-#pragma comment( lib, "Ws2_32.lib" )
+	#include <Winsock2.h>
+	#include <vector>
+	#pragma comment( lib, "Ws2_32.lib" )
 #endif
 
 class Server : public TCPSocket {

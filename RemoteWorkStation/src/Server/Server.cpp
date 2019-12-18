@@ -11,7 +11,9 @@
 #include <fstream>
 using namespace std;
 
-//ЭТО ВЕРСИЯ С КЛАССОМ Server
+#ifndef OS_WIN
+#define fopen_s(pFile,filename,mode) ((*(pFile))=fopen((filename), (mode)))==NULL
+#endif
 
 int main()
 {
@@ -20,14 +22,26 @@ int main()
 	Server server; TCPSocket client;
 
 	while (true) {
-		// Присоединяемся к серверу
-		string name;
-		//name = "10.211.55.1";
-		name = "127.0.0.1";//"192.168.1.34";//"127.0.0.1";
-		int port = 65041;
+
+        string name;
+        string prt;
+        FILE* config;
+        char ip[256];
+        if (!fopen_s(&config, "ipport.cfg", "rb"))
+            fgets(ip, 256, config);
+
+        name = ip;
+        name.erase(0, 3);  //delete "ip:"
+        name.erase(name.end() - 1); //delete '\n'
+
+        fgets(ip, 256, config);
+        prt = ip;
+        prt.erase(0, 5);  //delete "port:"
+        prt.erase(prt.end() - 1); //delete '\n'
+        int port = atoi(prt.c_str());
+        cout << "ip: " << name << "port: " << port << endl;
 
 		server.InitServer(name, port);
-		Sleep(1000);
 	
 		if (!server.WorkWithClient(port, server, client)) {
 			break;

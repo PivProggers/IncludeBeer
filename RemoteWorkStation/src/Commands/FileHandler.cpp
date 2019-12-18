@@ -3,6 +3,13 @@
 using namespace std;
 
 #define BUF_STD_SIZE 256
+#ifndef OS_WIN
+    #include <stdio.h>
+    #include "fcntl.h"
+    #include "sys/types.h"
+    #include "dirent.h"
+    #define fopen_s(pFile,filename,mode) ((*(pFile))=fopen((filename), (mode)))==NULL
+#endif
 
 string FileHandler::SendFile(const char* name)
 {
@@ -16,7 +23,6 @@ string FileHandler::SendFile(const char* name)
         fseek(fin, 0, SEEK_END);
         // Get size of the file
         unsigned int m_file_size = ftell(fin);
-        cout << m_file_size << endl;
         // Go to start
         rewind(fin);
 
@@ -91,3 +97,30 @@ string FileHandler::RecieveFile(string fileReadBuf, const char* name)
 	}
     return result;
 }
+
+#ifndef OS_WIN
+bool directoryexists(const char* path)
+{
+    const char* a = strrchr(path, '/');
+	char* clearpath = new char[a - path + 1];
+	clearpath[a - path] = '\0';
+	memcpy(clearpath, path, a - path);
+	string res = clearpath;
+	delete clearpath;
+        
+	if (res.c_str() == null) return false;
+
+	dir* dir;
+	bool exists = false;
+
+	dir = opendir(res.c_str());
+
+	if (dir != null)
+	{
+		exists = true;
+		(void)closedir(dir);
+	}
+
+	return exists;
+}
+#endif

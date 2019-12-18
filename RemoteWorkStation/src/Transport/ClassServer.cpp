@@ -34,7 +34,7 @@ bool Server::InitServer(const std::string & addr, int port) {
 	return (bound && listening);
 }
 
-
+#ifdef OS_WIN
 int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 
 	TCPSocket::AChar bufrec;
@@ -96,11 +96,11 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			ar(cereal::make_nvp("Command", com));
 			//вывод параметров
 			SetConsoleTextAttribute(hConsole, 11);
-			cout << "NAME: " << com.GetName() << " PARAMS: " << com.GetParameters();
+			cout << "\t" << "NAME: " << com.GetName() << " PARAMS: " << com.GetParameters();
 		}
 		cout << " IDofCom: "<< comname << endl;
 
-		if (comname == "com1") {
+		if (comname == "com1") { //Запуск приложения на удаленной системе
 			RunApplication command(com.GetName(), com.GetParameters());
 			command.Run();
 
@@ -114,7 +114,7 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			cout << report;
 			report.clear();
 		}
-		else if (comname == "com2") {
+		else if (comname == "com2") { //Выгрузка файла на удаленную систему
 			FileHandler command(com.GetName(), com.GetParameters());
 			string a,b;
 			a.assign(it + strlen(comname), bufrec.end());
@@ -134,8 +134,7 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			report.clear();
 
 		}
-		else if (comname == "com3") 
-		{
+		else if (comname == "com3") { //Загрузка файла с удаленной системы
 			FileHandler command(com.GetName(), com.GetParameters());
 			string a = command.SendFile(com.GetName().c_str());
 			TCPSocket::AChar sendbuf;
@@ -153,8 +152,7 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 			cout << report;
 			report.clear();
 		}
-		else if(comname == "com4") {
-			/*Delete*/
+		else if(comname == "com4") { //Удаление файла с удаленной системы
 			DelFile command(com.GetName(), com.GetParameters());
 			string a = command.Run();
 			cout << a << endl;
@@ -178,6 +176,138 @@ int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
 		else goto acception;
 	}
 }
+#else
+int Server::WorkWithClient(int port, Server& server, TCPSocket& client) {
+
+	TCPSocket::AChar bufrec;
+	while (true) {
+	tryout:
+		cout << "\tAccepting new connection...";
+
+		cout << "\!_OPEN CLIENT_!\t" << endl;
+
+		while (true)
+		{
+			//переменная для управления выводом сервера
+			client = TCPSocket::accept(port);
+		acception:
+			// Читаем переданных клиентом данные
+			bufrec = client.receive();
+
+			//крутим цикл, пока размер принятного буфера перестанет быть нулем
+			if (bufrec.size() != 0)
+				break;
+
+			// Отправляем клиенту полученную от него же строку
+			if (!client.send(bufrec)) {
+				cout << "Client closed connection" << endl;
+				goto tryout;
+			}
+		}
+
+		//вывод сообщения клиента
+		cout << "\tCLIENT MESSAGE:\t" << endl;
+
+		//_________вывод содержимого буфера__________//
+		auto it = bufrec.begin();
+		const char* comname;
+
+		//поиск команды
+		for (auto& cm : NameOfCommands) {
+			it = std::search(bufrec.begin(), bufrec.end(), cm, cm + strlen(cm));
+			if (it != bufrec.end()) {
+				comname = cm;
+				break;
+			}
+		}
+
+		//вывод содержимого xml
+		//cсоздаем объект класса и открываем поток на чтение
+		Command com;
+		std::stringstream ss(std::string(bufrec.begin(), it));
+		//deserialize block
+		{
+			cereal::XMLInputArchive ar(ss);
+			//чтение узла Command
+			ar(cereal::make_nvp("Command", com));
+			//вывод параметров
+			cout << "NAME: " << com.GetName() << " PARAMS: " << com.GetParameters();
+		}
+		cout << " IDofCom: " << comname << endl;
+
+		if (comname == "com1") {
+			RunApplication command(com.GetName(), com.GetParameters());
+			command.Run();
+			//report
+			string report = command.MakeReport();
+			TCPSocket::AChar sendbuf;
+
+			sendbuf.assign(report.begin(), report.end());
+
+			client.send(sendbuf);
+			sendbuf.clear();
+			cout << report;
+			report.clear();
+		}
+		else if (comname == "com2") {
+			FileHandler command(com.GetName(), com.GetParameters());
+			string a, b;
+			a.assign(it + strlen(comname), bufrec.end());
+			b = command.RecieveFile(a, com.GetParameters().c_str());
+			cout << b.c_str() << endl;
+			b.clear();
+			a.clear();
+
+			string report = command.MakeReport();
+			TCPSocket::AChar sendbuf;
+			sendbuf.assign(report.begin(), report.end());
+			client.send(sendbuf);
+			sendbuf.clear();
+			cout << report;
+			report.clear();
+		}
+		else if (comname == "com3") {
+
+			FileHandler command(com.GetName(), com.GetParameters());
+			string a = command.SendFile(com.GetName().c_str());
+			TCPSocket::AChar sendbuf;
+			sendbuf.assign(a.begin(), a.end());
+			client.send(sendbuf);
+			sendbuf.clear();
+			a.clear();
+
+			string report = command.MakeReport();
+			TCPSocket::AChar reportbuf;
+			reportbuf.assign(report.begin(), report.end());
+			client.send(reportbuf);
+			reportbuf.clear();
+			cout << report;
+			report.clear();
+		}
+		else if (comname == "com4") {
+			/*Delete*/
+			DelFile command(com.GetName(), com.GetParameters());
+			string a = command.Run();
+			cout << a << endl;
+			a.clear();
+
+			string report = command.MakeReport();
+			TCPSocket::AChar sendbuf;
+			sendbuf.assign(report.begin(), report.end());
+			client.send(sendbuf);
+			sendbuf.clear();
+			cout << report;
+			report.clear();
+		}
+
+		//очистка буфера
+		bufrec.clear();
+
+		if (this->connected) goto tryout;
+		else goto acception;
+	}
+}
+#endif
 
 int Server::CloseServer() {
 	cout << "\tShutdown SERVER...\t" << endl;
