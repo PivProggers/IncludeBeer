@@ -156,9 +156,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="TestFunctionDeclaration.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ClientTest.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -169,9 +171,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Commands\Commands.vcxproj">
       <Project>{0fc670e1-ea51-487e-a91e-baad0404724f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\RemoteWorkStation\RemoteWorkStation.vcxproj">
-      <Project>{777ac179-1630-4614-8ac4-80ca67619e8e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Server\Server.vcxproj">
       <Project>{0481a511-8e73-4b13-8add-a003af809c49}</Project>
