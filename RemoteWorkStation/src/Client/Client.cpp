@@ -54,6 +54,7 @@ int get_variant(int count) {
 
 int main() 
 {
+	SetConsoleOutputCP(1251);
 	refresh:
 	string name;
 	int port;

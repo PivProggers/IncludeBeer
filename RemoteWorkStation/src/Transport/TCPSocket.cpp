@@ -325,12 +325,18 @@ TCPSocket::AChar TCPSocket::receive()//принимаем данные
 			throw std::exception(::_itoa(::WSAGetLastError(), buf, 16));
 	}
 	catch (exception ex) {
-		cout << "Connection fault...Closed: " << ex.what()<<endl;
+		cout << "Connection fault...Closed: " << ex.what() << endl;
 		return rval;
 	}
 #else
-	if (res == SOCKET_ERROR)//если во время чтения произошла ошибка, кидаем исключение
-		throw runtime_error(itoa(buf, errno));
+	try {
+		if (res == SOCKET_ERROR)//если во время чтения произошла ошибка, кидаем исключение
+			throw runtime_error(itoa(buf, errno));
+	}
+	catch (runtime_error ex) {
+		cout << "Connection fault...Closed: " << ex.what() << endl;
+		return rval;
+	}
 #endif
 
 	if (res == 0)//если подключение было закрыто, то возвращаем пустой буфер
