@@ -27,22 +27,23 @@ int main()
         string prt;
         FILE* config;
         char ip[256];
-        if (!fopen_s(&config, "ipport.cfg", "rb"))
+        if (!fopen_s(&config, "..\\..\\..\\src\\Server\\ipport.cfg", "rb"))
             fgets(ip, 256, config);
 
         name = ip;
         name.erase(0, 3);  //delete "ip:"
-        name.erase(name.end() - 1); //delete '\n'
-
+        name.erase(name.end()); //delete '\n'
         fgets(ip, 256, config);
         prt = ip;
         prt.erase(0, 5);  //delete "port:"
-        prt.erase(prt.end() - 1); //delete '\n'
+        prt.erase(prt.end()); //delete '\n'
         int port = atoi(prt.c_str());
         cout << "ip: " << name << "port: " << port << endl;
+      /*  string name = "127.0.0.1";
+        int port = 65041;*/
 
 		server.InitServer(name, port);
-	
+
 		if (!server.WorkWithClient(port, server, client)) {
 			break;
 		}

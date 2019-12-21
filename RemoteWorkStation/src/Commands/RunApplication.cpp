@@ -8,7 +8,7 @@ RunApplication::RunApplication(string name, string parameters) {
 
 string RunApplication::Run() {
 	if (_name.empty()) {
-		cout << "Initialize object of the class before" << endl;
+		_error_report = "Name of application wasn't initialized...";
 		return "-1";
 	}
 	string result;

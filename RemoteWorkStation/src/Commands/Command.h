@@ -37,8 +37,6 @@ protected:
 	string _error_report = "0";	// 1/0 - success	/.../-code of error
 };
 
-
-
 class RunApplication : public Command {
 public:
 	COMMANDS_API RunApplication(string name, string parameters) ;

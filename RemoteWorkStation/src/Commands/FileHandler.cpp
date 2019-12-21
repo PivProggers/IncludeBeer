@@ -35,7 +35,7 @@ string FileHandler::SendFile(const char* name)
                 BLOCK_SIZE = m_file_size;
             else
                 BLOCK_SIZE = BUF_STD_SIZE;
-
+ 
             char* buffer = new char[BLOCK_SIZE];
 
             // Read "BLOCK_SIZE" bytes to buffer
